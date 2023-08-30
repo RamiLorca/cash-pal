@@ -7,7 +7,8 @@ const NavigationBar = () => {
 
             <Link className='nav-link' to='/'>Home</Link>
             <Link className='nav-link' to='/settings'>Settings</Link>
-            <Link className='nav-link' to='/login'>Login</Link>
+            <Link className='nav-link' to='/signin'>Sign In</Link>
+            <Link className="nav-link" to='/signout'>Sign Out</Link>
 
         </div>
         <Outlet />
