@@ -1,8 +1,12 @@
 import React from "react";
 
 const DisplayBalance = () => {
+  
+
   return (
-    <div>DisplayBalance.component</div>
+    <div>
+      <h1>Your Account Balance Is: {}</h1>
+    </div>
   )
 }
 
