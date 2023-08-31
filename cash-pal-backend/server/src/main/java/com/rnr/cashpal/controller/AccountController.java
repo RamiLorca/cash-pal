@@ -5,10 +5,7 @@ import com.rnr.cashpal.model.Account;
 import com.rnr.cashpal.model.GetAllAccountsDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
@@ -16,6 +13,7 @@ import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
+@CrossOrigin
 public class AccountController {
     private AccountDao accountDao;
 
