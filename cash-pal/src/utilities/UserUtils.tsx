@@ -1,1 +1,24 @@
 import axios from "axios";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+// const useToken = () => {
+//   return useSelector((state: RootState) => state.account.token);
+// };
+
+export const register = async (username: string, password: string) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/register`, {
+        username,
+        password,
+      });
+      if (response.status === 201) {
+        console.log("Successfully registered as " + username);
+      } else {
+        throw new Error("Failed to register");
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to register");
+    }
+};
