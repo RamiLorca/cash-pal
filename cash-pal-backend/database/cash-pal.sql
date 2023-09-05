@@ -9,11 +9,9 @@ CREATE SEQUENCE seq_account_id
 CREATE TABLE account (
     account_id int NOT NULL DEFAULT nextval('seq_account_id'),
     username varchar(50) NOT NULL,
-    email varchar(200) NOT NULL,
     password_hash varchar(200) NOT NULL,
     balance numeric(13, 2) NOT NULL,
     CONSTRAINT UQ_username UNIQUE (username),
-    CONSTRAINT UQ_email UNIQUE (email),
     CONSTRAINT PK_account PRIMARY KEY (account_id)
 );
 -- Sequence to start transfer_id values at 3001 instead of 1
@@ -36,12 +34,12 @@ ALTER TABLE transfer ADD CONSTRAINT FK_acount_sender FOREIGN KEY (sender_id) REF
 ALTER TABLE transfer ADD CONSTRAINT FK_acount_receiver FOREIGN KEY (receiver_id) REFERENCES account (account_id);
 
 --Adding Accounts--
-INSERT INTO account (username, email, password_hash, balance)
-    VALUES ('eric_cameron_1', 'eric_cameron_1@gmail.com', '$2a$10$eO6WQbesPXmpCsWQ2qK9OOKK9dpZ5tQORLaX9afr26nIkMZm8dXPe', 100);
-INSERT INTO account (username, email, password_hash, balance)
-    VALUES ('sean_oberc_2', 'sean_oberc_2@gmail.com', '$2a$10$tjFqrGHBrjaihjbq9/IOf.o3XRj7ePan0fNOCAZBQ4c8Ibr1xFJsW', 500);
-INSERT INTO account (username, email, password_hash, balance)
-    VALUES ('admin_1', 'admin_1@gmail.com', '$2a$10$t4D2Htu.5/ogUiLTpKMLfOJvLqlcHfD46NxyQ3w05rN2ufjPmZKhu', 800);
+INSERT INTO account (username, password_hash, balance)
+    VALUES ('eric_cameron_1', '$2a$10$eO6WQbesPXmpCsWQ2qK9OOKK9dpZ5tQORLaX9afr26nIkMZm8dXPe', 100);
+INSERT INTO account (username, password_hash, balance)
+    VALUES ('sean_oberc_2', '$2a$10$tjFqrGHBrjaihjbq9/IOf.o3XRj7ePan0fNOCAZBQ4c8Ibr1xFJsW', 500);
+INSERT INTO account (username, password_hash, balance)
+    VALUES ('admin_1', '$2a$10$t4D2Htu.5/ogUiLTpKMLfOJvLqlcHfD46NxyQ3w05rN2ufjPmZKhu', 800);
 
 --Adding Transactions--
 

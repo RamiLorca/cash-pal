@@ -1,8 +1,8 @@
 package com.rnr.cashpal.security;
 
 
-import com.rnr.cashpal.dao.UserDao;
-import com.rnr.cashpal.model.User;
+import com.rnr.cashpal.dao.AccountDao;
+import com.rnr.cashpal.model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,28 +22,28 @@ public class UserModelDetailsService implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(UserModelDetailsService.class);
 
-    private final UserDao userDao;
+    private final AccountDao accountDao;
 
-    public UserModelDetailsService(UserDao userDao) {
-        this.userDao = userDao;
+    public UserModelDetailsService(AccountDao accountDao) {
+        this.accountDao = accountDao;
     }
 
     @Override
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating user '{}'", login);
         String lowercaseLogin = login.toLowerCase();
-        return createSpringSecurityUser(lowercaseLogin, userDao.findByUsername(lowercaseLogin));
+        return createSpringSecurityUser(lowercaseLogin, accountDao.findByUsername(lowercaseLogin));
     }
 
-    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, User user) {
-        if (!user.isActivated()) {
+    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, Account account) {
+        if (!account.isActivated()) {
             throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
         }
-        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+        List<GrantedAuthority> grantedAuthorities = account.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                 .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(),
+        return new org.springframework.security.core.userdetails.User(account.getUsername(),
+                account.getPassword(),
                 grantedAuthorities);
     }
 }

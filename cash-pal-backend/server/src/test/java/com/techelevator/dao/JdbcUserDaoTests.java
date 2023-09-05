@@ -1,8 +1,7 @@
 package com.techelevator.dao;
 
-
-import com.rnr.cashpal.dao.JdbcUserDao;
-import com.rnr.cashpal.model.User;
+import com.rnr.cashpal.dao.JdbcAccountDao;
+import com.rnr.cashpal.model.Account;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,31 +11,23 @@ import java.util.List;
 
 public class JdbcUserDaoTests extends BaseDaoTests{
 
-    private JdbcUserDao sut;
+    private JdbcAccountDao sut;
 
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcUserDao(jdbcTemplate);
-    }
-
-    @Test
-    public void createNewUser() {
-        boolean userCreated = sut.create("TEST_USER","test_password");
-        Assert.assertTrue(userCreated);
-        User user = sut.findByUsername("TEST_USER");
-        Assert.assertEquals("TEST_USER", user.getUsername());
+        sut = new JdbcAccountDao(jdbcTemplate);
     }
 
     @Test
     public void findIdByUsernameTest() {
-        int userId = sut.findIdByUsername("eric_cameron_1");
-        Assert.assertEquals(1001, userId);
+        int accountId = sut.findIdByUsername("eric_cameron_1");
+        Assert.assertEquals(1001, accountId);
     }
 
     @Test
     public void findAllTest() {
-        List<User> actual = sut.findAll();
+        List<Account> actual = sut.findAll();
         int actualSize = actual.size();
         Assert.assertEquals(3, actualSize);
     }

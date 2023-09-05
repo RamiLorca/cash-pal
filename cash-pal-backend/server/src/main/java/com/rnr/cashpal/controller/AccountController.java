@@ -35,5 +35,10 @@ public class AccountController {
     public List<GetAllAccountsDTO> getAllAccounts() {
         return accountDao.getAllAccounts();
     }
+
+    @RequestMapping(path = "/accounts/autocomplete", method = RequestMethod.GET)
+    public List<String> getAutoCompleteSuggestions(@RequestParam("query") String query) {
+        return accountDao.getAutoCompleteSuggestions(query);
+    }
 }
 

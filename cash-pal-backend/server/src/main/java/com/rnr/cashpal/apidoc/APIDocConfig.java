@@ -19,8 +19,8 @@ public class APIDocConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "Tenmo",
-                "Tenmo application",
+                "CashPal",
+                "CashPal application",
                 "0.0.1",
                 null,
                 new Contact("name", "website", "e-mail"),

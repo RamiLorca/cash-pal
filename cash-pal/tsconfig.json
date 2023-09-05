@@ -18,9 +18,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["hoist-non-react-statics"]
   },
   "include": [
-    "src"
+    "src",
+    "types", 
+    "webpack.config.js"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

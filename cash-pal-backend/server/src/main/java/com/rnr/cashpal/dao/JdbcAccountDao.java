@@ -6,6 +6,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -14,10 +16,26 @@ import java.util.List;
 
 @Component
 public class JdbcAccountDao implements AccountDao {
+    private final BigDecimal INITIAL_BALANCE = new BigDecimal("1000.00");
+    private final int suggestionLimit = 10;
     private JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDao (JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public boolean create(String username, String password) {
+        // create user
+        String sql = "INSERT INTO account (username, password_hash, balance) VALUES (?, ?, ?) RETURNING account_id";
+        String password_hash = new BCryptPasswordEncoder().encode(password);
+        Integer newAccountId;
+        try {
+            newAccountId = jdbcTemplate.queryForObject(sql, Integer.class, username, password_hash, INITIAL_BALANCE);
+        } catch (DataAccessException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -83,6 +101,18 @@ public class JdbcAccountDao implements AccountDao {
         }
 
         return updatedReceiverBalance;
+    }
+
+    @Override
+    public List<Account> findAll() {
+        List<Account> accounts = new ArrayList<>();
+        String sql = "SELECT account_id, username, password_hash FROM account;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while(results.next()) {
+            Account account = mapRowToAccount(results);
+            accounts.add(account);
+        }
+        return accounts;
     }
 
     @Override
@@ -159,13 +189,43 @@ public class JdbcAccountDao implements AccountDao {
         return false;
     }
 
+    @Override
+    public Account findByUsername(String username) throws UsernameNotFoundException {
+        String sql = "SELECT * FROM account WHERE username ILIKE ?;";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
+        if (rowSet.next()){
+            return mapRowToAccount(rowSet);
+        }
+        throw new UsernameNotFoundException("User " + username + " was not found.");
+    }
+
+    @Override
+    public int findIdByUsername(String username) {
+        String sql = "SELECT account_id FROM account WHERE username ILIKE ?;";
+        Integer id = jdbcTemplate.queryForObject(sql, Integer.class, username);
+        if (id != null) {
+            return id;
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public List<String> getAutoCompleteSuggestions(String query) {
+        String sql = "SELECT DISTINCT username FROM account WHERE username ILIKE ? LIMIT ?";
+        String wildcardPattern = "%" + query + "%";
+        int limit = suggestionLimit;
+        return jdbcTemplate.queryForList(sql, String.class, wildcardPattern, limit);
+    }
 
     private Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
         account.setAccountId(rs.getInt("account_id"));
         account.setUsername(rs.getString("username"));
+        account.setPassword(rs.getString("password_hash"));
         account.setBalance(rs.getBigDecimal("balance"));
-
+        account.setActivated(true);
+        account.setAuthorities("USER");
         return account;
     }
 
@@ -175,4 +235,5 @@ public class JdbcAccountDao implements AccountDao {
         dto.setAccountId(rs.getInt("account_id"));
         return dto;
     }
+
 }

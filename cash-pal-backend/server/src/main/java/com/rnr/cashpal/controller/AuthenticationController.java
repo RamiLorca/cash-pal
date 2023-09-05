@@ -2,6 +2,7 @@ package com.rnr.cashpal.controller;
 
 import javax.validation.Valid;
 
+import com.rnr.cashpal.model.Account;
 import com.rnr.cashpal.security.jwt.TokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,10 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.rnr.cashpal.dao.UserDao;
+import com.rnr.cashpal.dao.AccountDao;
 import com.rnr.cashpal.model.LoginDTO;
 import com.rnr.cashpal.model.RegisterUserDTO;
-import com.rnr.cashpal.model.User;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -25,12 +25,12 @@ public class AuthenticationController {
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private UserDao userDao;
+    private AccountDao accountDao;
 
-    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao) {
+    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, AccountDao accountDao) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.userDao = userDao;
+        this.accountDao = accountDao;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -43,31 +43,29 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication, false);
         
-        User user = userDao.findByUsername(loginDto.getUsername());
+        Account account = accountDao.findByUsername(loginDto.getUsername());
 
-        return new LoginResponse(jwt, user);
+        return new LoginResponse(jwt, account);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public void register(@Valid @RequestBody RegisterUserDTO newUser) {
-        if (!userDao.create(newUser.getUsername(), newUser.getPassword())) {
+        if (!accountDao.create(newUser.getUsername(), newUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
         }
     }
-
 
     /**
      * Object to return as body in JWT Authentication.
      */
     static class LoginResponse {
-
         private String token;
-        private User user;
+        private Account account;
 
-        LoginResponse(String token, User user) {
+        LoginResponse(String token, Account account) {
             this.token = token;
-            this.user = user;
+            this.account = account;
         }
 
         public String getToken() {
@@ -78,12 +76,12 @@ public class AuthenticationController {
             this.token = token;
         }
 
-		public User getUser() {
-			return user;
+		public Account getAccount() {
+			return account;
 		}
 
-		public void setUser(User user) {
-			this.user = user;
+		public void setAccount(Account account) {
+			this.account = account;
 		}
     }
 }
