@@ -1,10 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
-import accountReducer, { AccountState } from './features/account';
-
+import { configureStore } from "@reduxjs/toolkit";
+import accountReducer, {AccountState} from "./features/account";
 
 export interface RootState {
     account: AccountState;
-  }
+}
 
 const store = configureStore({
     reducer: {

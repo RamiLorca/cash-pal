@@ -5,16 +5,21 @@ import javax.validation.Valid;
 import com.rnr.cashpal.model.Account;
 import com.rnr.cashpal.security.jwt.TokenProvider;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.HttpMediaTypeException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 import com.rnr.cashpal.dao.AccountDao;
 import com.rnr.cashpal.model.LoginDTO;
 import com.rnr.cashpal.model.RegisterUserDTO;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
  * Controller to authenticate users.
@@ -51,8 +56,24 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public void register(@Valid @RequestBody RegisterUserDTO newUser) {
-        if (!accountDao.create(newUser.getUsername(), newUser.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
+//        if (!accountDao.create(newUser.getUsername(), newUser.getPassword())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
+//        }
+
+        try {
+            accountDao.create(newUser.getUsername(), newUser.getPassword());
+        }
+        catch (HttpClientErrorException e) {
+            System.out.println("HttpClientErrorException");
+            System.out.println(e.getMessage());
+        }
+        catch (HttpMessageNotReadableException e) {
+            System.out.println("HttpMessageNotReadableException");
+            System.out.println(e.getMessage());
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println("IllegalArgumentException");
+            System.out.println(e.getMessage());
         }
     }
 

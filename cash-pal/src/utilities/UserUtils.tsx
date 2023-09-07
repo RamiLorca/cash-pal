@@ -8,16 +8,17 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const register = async (username: string, password: string) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/register`, {
-        username,
-        password,
+      const response = await axios.post(`http://localhost:8080/register`, {
+        username: username,
+        password: password,
       });
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         console.log("Successfully registered as " + username);
       } else {
         throw new Error("Failed to register");
       }
     } catch (error) {
+      console.log("Testing"); 
       console.error(error);
       throw new Error("Failed to register");
     }
