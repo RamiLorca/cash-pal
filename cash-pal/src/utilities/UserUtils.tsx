@@ -6,7 +6,11 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 //   return useSelector((state: RootState) => state.account.token);
 // };
 
+// `${API_BASE_URL}/register`
+
 export const register = async (username: string, password: string) => {
+
+    console.log(API_BASE_URL);
     try {
       const response = await axios.post(`http://localhost:8080/register`, {
         username: username,
