@@ -33,15 +33,20 @@ function SignInForm() {
       dispatch(setAccountId(response.account.account_id));
       dispatch(setActivated(response.account.activated));
       dispatch(setAuthorities(response.account.authorities.name));
+      dispatch(setAccountBalance(response.account.balance));
       dispatch(setToken(response.token));
 
       setUsername("");
       setPassword("");
 
-      console.log("Logged in as: " + username);
+
+      console.log(response);
+      console.log("handleSignIn: fetchSignInDetails: username:" + account.username);
     } catch (error) {
       console.error(error);
     }
+    console.log("SignInForm: Logged in as: " + account.username);
+    console.log("SignInForm: Balance: " + account.balance);
   }
 
   return (
@@ -65,4 +70,4 @@ function SignInForm() {
   )
 }
 
-export default SignInForm
+export default SignInForm;

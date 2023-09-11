@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../store";
-import { setToken } from "../features/account";
+import { setToken, setAccountBalance, setUsername } from "../features/account";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -28,19 +28,26 @@ export const register = async (username: string, password: string) => {
   }
 };
 
-export const fetchSignInDetails = async (username: string, password: string) => {
+export const fetchSignInDetails = async (
+  username: string,
+  password: string
+) => {
   try {
     const response = await axios.post(`http://localhost:8080/login`, {
       username,
       password,
     });
     if (response.status === 200) {
-      const { token } = response.data;
+      const { token, account } = response.data;
       store.dispatch(setToken(token));
+      store.dispatch(setAccountBalance(account.balance));
+      store.dispatch(setUsername(account.username));
+      console.log("fetchSignInDetails: account balance: " + account.balance);
     } else {
       throw new Error("Failed to log in");
     }
     return response.data;
+    
   } catch (error) {
     console.error(error);
     throw new Error("Failed to log in");
