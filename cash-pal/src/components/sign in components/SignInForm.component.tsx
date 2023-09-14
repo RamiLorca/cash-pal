@@ -33,20 +33,19 @@ function SignInForm() {
       dispatch(setAccountId(response.account.account_id));
       dispatch(setActivated(response.account.activated));
       dispatch(setAuthorities(response.account.authorities.name));
-      dispatch(setAccountBalance(response.account.balance));
       dispatch(setToken(response.token));
 
       setUsername("");
       setPassword("");
 
-
-      console.log(response);
-      console.log("handleSignIn: fetchSignInDetails: username:" + account.username);
+      console.log("Logged in as: " + username);
     } catch (error) {
       console.error(error);
     }
-    console.log("SignInForm: Logged in as: " + account.username);
-    console.log("SignInForm: Balance: " + account.balance);
+  }
+
+  const testStore = () => {
+    console.log(account.balance);
   }
 
   return (
@@ -66,8 +65,9 @@ function SignInForm() {
       />
 
       <button type="submit">Login</button>
+      <button type='button' onClick={testStore}>Test</button>
     </form>
   )
 }
 
-export default SignInForm;
+export default SignInForm
