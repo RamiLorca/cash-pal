@@ -1,5 +1,11 @@
-
 import React, { useState } from 'react';
+import { transactionRequest } from '../../utilities/TransferUtils';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+
+const { account_id } = useSelector((state: RootState) => ({
+  account_id: state.account.account_id,
+}));
 
 const TransactionForm = () => {
 
@@ -9,14 +15,44 @@ const TransactionForm = () => {
         setActiveButton(buttonType);
       };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (activeButton === 'Send Money') {
-          // Logic for sending money
+          try {
+            // Logic for sending money
+          const response = await transactionRequest(account_id, receiverId, amount);
+          console.log(response);
+          // Add setter functions to clear input fields.
+
+          /*
+           * Send request to the backend
+           * If (success status returned)
+           *   Send POST to the back end to store data in the database
+           *  
+          */
           console.log('Sending money...');
+          }
+          catch (error) {
+            console.error(error);
+          };
         } else if (activeButton === 'Request Money') {
-          // Logic for requesting money
+          try {
+            // Logic for sending money
+          const response = await transactionRequest(senderId, account_id, amount);
+          console.log(response);
+          // Add setter functions to clear input fields.
+
+          /*
+           * Send request to the backend
+           * If (success status returned)
+           *   Send POST to the back end to store data in the database
+           *  
+          */
           console.log('Requesting money...');
+          }
+          catch (error) {
+            console.error(error);
+          };
         }
       };
 
