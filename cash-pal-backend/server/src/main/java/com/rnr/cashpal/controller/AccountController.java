@@ -17,7 +17,7 @@ import java.util.List;
 public class AccountController {
     private AccountDao accountDao;
 
-    public AccountController (AccountDao accountDao) {
+    public AccountController(AccountDao accountDao) {
         this.accountDao = accountDao;
     }
 
@@ -25,8 +25,7 @@ public class AccountController {
     public Account getBalance(@PathVariable int accountId, Principal principal) {
         if (accountDao.verifyAccount(accountId, principal.getName())) {
             return accountDao.getAccountById(accountId);
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username did not match");
         }
     }
@@ -40,5 +39,10 @@ public class AccountController {
     public List<String> getAutoCompleteSuggestions(@RequestParam("query") String query) {
         return accountDao.getAutoCompleteSuggestions(query);
     }
-}
 
+    @RequestMapping(path = "/accounts/username/{username}", method = RequestMethod.GET)
+    public Account getAccountByUsername(@PathVariable String username) {
+        return accountDao.findByUsername(username);
+    }
+
+}

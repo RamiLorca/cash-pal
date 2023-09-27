@@ -191,7 +191,7 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public Account findByUsername(String username) throws UsernameNotFoundException {
-        String sql = "SELECT * FROM account WHERE username ILIKE ?;";
+        String sql = "SELECT * FROM account WHERE username = ?;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
         if (rowSet.next()){
             return mapRowToAccount(rowSet);
