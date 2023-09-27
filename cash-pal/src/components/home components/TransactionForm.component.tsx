@@ -1,59 +1,53 @@
-import React, { useState } from 'react';
-import { transactionRequest } from '../../utilities/TransferUtils';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import React, { useState } from "react";
+import { transactionRequest } from "../../utilities/TransferUtils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { fetchOtherUserId } from "../../utilities/UserUtils";
 
 const TransactionForm = () => {
-
   const { account_id } = useSelector((state: RootState) => ({
     account_id: state.account.account_id,
   }));
 
-  const [activeButton, setActiveButton] = useState('Send Money');
-  const [amount, setAmount] = useState(0.00);
+  const [activeButton, setActiveButton] = useState("Send Money");
+  const [amount, setAmount] = useState(0.0);
+  const [otherUsername, setOtherUsername] = useState("");
+  const [otherUserId, setOtherUserId] = useState(0);
 
   const handleButtonClick = (buttonType: string) => {
     setActiveButton(buttonType);
   };
 
+  const getOtherUserId = async (otherUsername: string) => {
+    setOtherUserId(await fetchOtherUserId(otherUsername)
+    );
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    
+    getOtherUserId(otherUsername);
+
     event.preventDefault();
-    if (activeButton === 'Send Money') {
+    if (activeButton === "Send Money") {
       try {
-        // Logic for sending money
-        const response = await transactionRequest(account_id, receiverId, amount);
+        const response = await transactionRequest(
+          account_id,
+          otherUserId,
+          amount
+        );
         console.log(response);
-        // Add setter functions to clear input fields.
-
-        /*
-         * Send request to the backend
-         * If (success status returned)
-         *   Send POST to the back end to store data in the database
-         *  
-        */
-        console.log('Sending money...');
-      }
-      catch (error) {
+        console.log("Sending money...");
+      } catch (error) {
         console.error(error);
-      };
-    } else if (activeButton === 'Request Money') {
+      }
+    } else if (activeButton === "Request Money") {
       try {
-        // Logic for sending money
-        const response = await transactionRequest(senderId, account_id, amount);
+        const response = await transactionRequest(otherUserId, account_id, amount);
         console.log(response);
-        // Add setter functions to clear input fields.
-
-        /*
-         * Send request to the backend
-         * If (success status returned)
-         *   Send POST to the back end to store data in the database
-         *  
-        */
-        console.log('Requesting money...');
-      }
-      catch (error) {
+        console.log("Requesting money...");
+      } catch (error) {
         console.error(error);
-      };
+      }
     }
   };
 
@@ -61,12 +55,24 @@ const TransactionForm = () => {
     <div>
       <h1>Transaction Form</h1>
 
-      <button onClick={() => handleButtonClick('Send Money')}>Send Money</button>
-      <button onClick={() => handleButtonClick('Request Money')}>Request Money</button>
+      <button onClick={() => handleButtonClick("Send Money")}>
+        Send Money
+      </button>
+      <button onClick={() => handleButtonClick("Request Money")}>
+        Request Money
+      </button>
 
       <form onSubmit={handleSubmit}>
 
-        <input type="text" placeholder="Enter username"></input>
+        {/* for later: create alternating labels for other user's username: send to: & request from: */}
+
+        <input 
+          type="text" 
+          placeholder="Enter username"
+          onChange={(event) => {
+            setOtherUsername(event.target.value);
+          }} 
+        />
 
         <br />
 
@@ -83,11 +89,9 @@ const TransactionForm = () => {
         <br />
 
         <input type="submit" value={activeButton} />
-
       </form>
-
     </div>
-  )
-}
+  );
+};
 
 export default TransactionForm;

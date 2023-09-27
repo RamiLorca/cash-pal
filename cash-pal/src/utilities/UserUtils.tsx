@@ -2,8 +2,6 @@ import axios from "axios";
 import store from "../store";
 import { setToken, setAccountBalance, setUsername } from "../features/account";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
 // const useToken = () => {
 //   return useSelector((state: RootState) => state.account.token);
 // };
@@ -51,5 +49,17 @@ export const fetchSignInDetails = async (
   } catch (error) {
     console.error(error);
     throw new Error("Failed to log in");
+  }
+};
+
+export const fetchOtherUserId = async (
+  otherUsername: string
+) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/accounts/username/${otherUsername}`);
+    return response.data.account_id;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to fetch other user's Id");
   }
 };
