@@ -9,18 +9,40 @@ export interface Transfer {
     time_sent: Date | null;
 }
 
+
+
 export interface TransferState {
-    transfer: Transfer | null;
-}
+    transfer: Transfer,
+    transfers: Transfer[]
+};
 
 const initialStateValue: TransferState = {
-    transfer: null
+    transfer: {
+        amount: 0,
+        transfer_id: 0,
+        transfer_status: '',
+        sender_id: 0,
+        receiver_id: 0,
+        time_sent: null
+    },
+    transfers: []
 };
 
 export const transferSlice = createSlice({
     name: 'transfer',
     initialState: initialStateValue,
     reducers: {
+        addTransfer: (state) => {
+            state.transfers.push(state.transfer);
+            state.transfer =  {
+                amount: 0,
+                transfer_id: 0,
+                transfer_status: '',
+                sender_id: 0,
+                receiver_id: 0,
+                time_sent: null
+            };
+        },
         setAmount: (state, action: PayloadAction<number>) => {
             if(state.transfer)
                 state.transfer.amount = action.payload 
@@ -54,7 +76,8 @@ export const {
     setTransferStatus,
     setSenderId,
     setReceiverId,
-    setTimeSent
+    setTimeSent,
+    addTransfer
 } = transferSlice.actions;
 
 export default transferSlice.reducer;
