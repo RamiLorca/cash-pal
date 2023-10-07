@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { transactionRequest } from "../../utilities/TransferUtils";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -18,18 +18,32 @@ const TransactionForm = () => {
     setActiveButton(buttonType);
   };
 
+  // const getOtherUserId = async (otherUsername: string) => {
+  //   setOtherUserId(await fetchOtherUserId(otherUsername)
+  //   );
+  // }
+
   const getOtherUserId = async (otherUsername: string) => {
-    setOtherUserId(await fetchOtherUserId(otherUsername)
-    );
-  }
+    try {
+      const OtherUserId = await fetchOtherUserId(otherUsername);
+      console.log("Other User ID:", OtherUserId);
+      setOtherUserId(OtherUserId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     
-    getOtherUserId(otherUsername);
+    // getOtherUserId(otherUsername);
 
     event.preventDefault();
+
     if (activeButton === "Send Money") {
       try {
+        console.log("handleSubmit before await getOtherUserId: " + otherUsername);
+        await getOtherUserId(otherUsername);
+
         const response = await transactionRequest(
           account_id,
           otherUserId,
@@ -42,6 +56,7 @@ const TransactionForm = () => {
       }
     } else if (activeButton === "Request Money") {
       try {
+        await getOtherUserId(otherUsername);
         const response = await transactionRequest(otherUserId, account_id, amount);
         console.log(response);
         console.log("Requesting money...");

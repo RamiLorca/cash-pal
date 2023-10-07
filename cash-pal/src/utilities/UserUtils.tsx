@@ -50,6 +50,7 @@ export const fetchSignInDetails = async (
     } else {
       throw new Error("Failed to log in");
     }
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -60,6 +61,7 @@ export const fetchSignInDetails = async (
 export const fetchOtherUserId = async (otherUsername: string) => {
   try {
     const token = store.getState().account.token;
+    console.log(otherUsername);
     const response = await axios.get(
       `http://localhost:8080/accounts/username/${otherUsername}`,
       {
