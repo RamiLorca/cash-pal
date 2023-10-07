@@ -31,7 +31,6 @@ public class TransferController {
         int senderId = transfer.getSenderId();
         int receiverId = transfer.getReceiverId();
         BigDecimal amount = transfer.getAmount();
-
         if(!transferDao.initiateTransfer(senderId, receiverId, amount)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer initialization failed.");
         }

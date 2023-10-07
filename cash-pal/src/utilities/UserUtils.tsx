@@ -14,8 +14,6 @@ import type { RootState } from "../store";
 //   return useSelector((state: RootState) => state.account.token);
 // };
 
-const token = store.getState().account.token;
-
 export const register = async (username: string, password: string) => {
   try {
     const response = await axios.post(`http://localhost:8080/register`, {
@@ -52,7 +50,6 @@ export const fetchSignInDetails = async (
     } else {
       throw new Error("Failed to log in");
     }
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -62,8 +59,7 @@ export const fetchSignInDetails = async (
 
 export const fetchOtherUserId = async (otherUsername: string) => {
   try {
-    console.log(otherUsername);
-    console.log(token);
+    const token = store.getState().account.token;
     const response = await axios.get(
       `http://localhost:8080/accounts/username/${otherUsername}`,
       {
