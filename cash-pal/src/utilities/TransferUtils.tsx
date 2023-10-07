@@ -6,9 +6,11 @@ import store from "../store";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-const useToken = () => {
-    return useSelector((state: RootState) => state.account.token);
-};
+// const useToken = () => {
+//     return useSelector((state: RootState) => state.account.token);
+// };
+
+const token = store.getState().account.token;
 // export const fetchAccountBalance = async () => {
 //   try {
 //     const response = await axios.get(`${API_BASE_URL}/accounts/2001`);
@@ -22,16 +24,17 @@ export const transactionRequest = async (senderId: number, receiverId: number, a
     try {
         const response = await axios.post(`http://localhost:8080/transfer`, {
             headers: {
-                Authorization: `Bearer ${useToken}`,
+                Authorization: `Bearer ${token}`,
             },
             senderId: senderId,
             receiverId: receiverId,
             amount: amount
         });
 
-        // if (response status === 200 || response status === 201)
-        //      trigger function(s) to create transaction object and save it to the store
-        // return response.data
+        if (response.status === 200 || response.status === 201) {
+            // trigger function(s) to create transaction object and save it to the store
+            return response.data
+        }
     }
     catch (error) {
         console.error(error);

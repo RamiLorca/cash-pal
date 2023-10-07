@@ -1,12 +1,20 @@
 import axios from "axios";
 import store from "../store";
 import { setToken, setAccountBalance, setUsername } from "../features/account";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import type { RootState } from "../store";
 
 // const useToken = () => {
 //   return useSelector((state: RootState) => state.account.token);
 // };
 
 // `${API_BASE_URL}/register`
+
+// const useToken = () => {
+//   return useSelector((state: RootState) => state.account.token);
+// };
+
+const token = store.getState().account.token;
 
 export const register = async (username: string, password: string) => {
   try {
@@ -44,19 +52,26 @@ export const fetchSignInDetails = async (
     } else {
       throw new Error("Failed to log in");
     }
+    console.log(response.data);
     return response.data;
-    
   } catch (error) {
     console.error(error);
     throw new Error("Failed to log in");
   }
 };
 
-export const fetchOtherUserId = async (
-  otherUsername: string
-) => {
+export const fetchOtherUserId = async (otherUsername: string) => {
   try {
-    const response = await axios.get(`http://localhost:8080/accounts/username/${otherUsername}`);
+    console.log(otherUsername);
+    console.log(token);
+    const response = await axios.get(
+      `http://localhost:8080/accounts/username/${otherUsername}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data.account_id;
   } catch (error) {
     console.error(error);

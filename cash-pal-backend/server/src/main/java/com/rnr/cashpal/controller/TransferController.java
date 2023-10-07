@@ -14,6 +14,7 @@ import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
+@CrossOrigin
 public class TransferController {
 
     private TransferDao transferDao;
