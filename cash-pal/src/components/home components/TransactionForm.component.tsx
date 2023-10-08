@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { transactionRequest } from "../../utilities/TransferUtils";
+import { transactionRequest, fetchTransfers } from "../../utilities/TransferUtils";
 import { RootState } from "../../store";
 import { fetchOtherUserId } from "../../utilities/UserUtils";
-import { useSelector, useDispatch } from "react-redux";
-import { 
-  addTransfer, 
-  setReceiverUsername, 
-  setSenderUsername, 
-  setAmount 
-} from "../../features/transfer";
+import { useSelector } from "react-redux";
+
+// import { 
+//   addTransfer, 
+//   setReceiverUsername, 
+//   setSenderUsername, 
+//   setAmount 
+// } from "../../features/transfer";
 
 const TransactionForm = () => {
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const { transfer } = useSelector((state: RootState) => ({
     transfer: state.transfer,
@@ -22,9 +23,9 @@ const TransactionForm = () => {
     account_id: state.account.account_id,
   }));
 
-  const { account } = useSelector ((state: RootState) => ({
-    account: state.account
-  }));
+  // const { account } = useSelector ((state: RootState) => ({
+  //   account: state.account
+  // }));
 
   const [activeButton, setActiveButton] = useState("Send Money");
   const [currentAmount, setCurrentAmount] = useState(0.0);
@@ -45,13 +46,13 @@ const TransactionForm = () => {
     amountInput.value = "";
   };
 
-  const createTransfer = (senderId: string, receiverId: string, amount: number) => {
+  // const createTransfer = (senderId: string, receiverId: string, amount: number) => {
     
-    dispatch(setSenderUsername(senderId));
-    dispatch(setReceiverUsername(receiverId));
-    dispatch(setAmount(amount));
-    dispatch(addTransfer());
-  };
+  //   dispatch(setSenderUsername(senderId));
+  //   dispatch(setReceiverUsername(receiverId));
+  //   dispatch(setAmount(amount));
+  //   dispatch(addTransfer());
+  // };
 
   useEffect(() => {
     console.log("Current transfers in store: ", transfer.transfers);
@@ -74,8 +75,8 @@ const TransactionForm = () => {
 
         console.log("Sending money...");
 
-        createTransfer(account.username, otherUsername, currentAmount);
-
+        // createTransfer(account.username, otherUsername, currentAmount);
+        fetchTransfers(account_id);
         resetForm();
       } catch (error) {
         console.error(error);
@@ -91,9 +92,9 @@ const TransactionForm = () => {
 
         console.log("Requesting money...");
 
-        createTransfer(otherUsername, account.username, currentAmount);
-
+        fetchTransfers(account_id);
         resetForm();
+        
       } catch (error) {
         console.error(error);
       }

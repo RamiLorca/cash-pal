@@ -9,6 +9,7 @@ import {
 } from "../../features/account";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
+import { fetchTransfers } from '../../utilities/TransferUtils';
 
 const SignInForm = () => {
 
@@ -39,9 +40,12 @@ const SignInForm = () => {
       setPassword("");
 
       console.log("Logged in as: " + username);
+
+      fetchTransfers(response.account.account_id);
     } catch (error) {
       console.error(error);
     }
+
   }
 
   const testStore = () => {
@@ -70,4 +74,4 @@ const SignInForm = () => {
   )
 }
 
-export default SignInForm
+export default SignInForm;

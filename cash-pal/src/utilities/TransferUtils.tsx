@@ -1,6 +1,16 @@
 import axios from "axios";
 import store from "../store";
-import { updateTransfers } from "../features/transfer";
+import { 
+      addTransfer, 
+      setAmount, 
+      setReceiverId, 
+      setSenderId,  
+      setTimeSent, 
+      setTransferId, 
+      setTransferStatus,
+      Transfer,
+      updateTransfers 
+} from "../features/transfer";
 
 export const transactionRequest = async (
   senderId: number,
@@ -44,7 +54,7 @@ export const fetchTransfers = async (userId: number) => {
     const token = store.getState().account.token;
 
     const response = await axios.get(
-      `http://localhost:8080/transfer/${userId}`,
+      `http://localhost:8080/transfers/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,9 +62,24 @@ export const fetchTransfers = async (userId: number) => {
       }
     );
 
+    if (response.data) {
+      store.dispatch(updateTransfers([]));
+    }
+
     const transfers = response.data;
-    
-    store.dispatch(updateTransfers(transfers));
+
+    // need to add sender and receiver usernames, either to database or import it from other component
+  
+    transfers.forEach((transfer: Transfer) => {
+      store.dispatch(setAmount(transfer.amount));
+      store.dispatch(setTransferId(transfer.transfer_id));
+      store.dispatch(setTransferStatus(transfer.transfer_status));
+      store.dispatch(setSenderId(transfer.sender_id));
+      store.dispatch(setReceiverId(transfer.receiver_id));
+      store.dispatch(setTimeSent(transfer.time_sent));
+
+      store.dispatch(addTransfer());
+    });
 
     return transfers;
 

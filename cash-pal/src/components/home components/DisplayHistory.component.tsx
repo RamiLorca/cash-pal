@@ -12,8 +12,10 @@ const DisplayHistory = () => {
         {transfers.map((transfer) => (
           <Transfer
             key={transfer.transfer_id}
-            sender={transfer.sender_username}
-            receiver={transfer.receiver_username}
+            transfer_id={transfer.transfer_id}
+            transfer_status={transfer.transfer_status}
+            sender_username={transfer.sender_username}
+            receiver_username={transfer.receiver_username}
             amount={transfer.amount}
           />
         ))}

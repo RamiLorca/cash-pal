@@ -12,8 +12,8 @@ export interface Transfer {
 }
 
 export interface TransferState {
-    transfer: Transfer,
-    transfers: Transfer[]
+    transfer: Transfer;
+    transfers: Transfer[];
 };
 
 const initialStateValue: TransferState = {
@@ -78,7 +78,7 @@ export const transferSlice = createSlice({
             if(state.transfer)
                 state.transfer.receiver_username = action.payload;
         },
-        setTimeSent: (state, action: PayloadAction<Date>) => {
+        setTimeSent: (state, action: PayloadAction<Date | null>) => {
             if(state.transfer)
                 state.transfer.time_sent = action.payload;
         }
