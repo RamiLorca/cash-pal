@@ -1,18 +1,6 @@
 import axios from "axios";
 import store from "../store";
 import { setToken, setAccountBalance, setUsername } from "../features/account";
-import { useSelector } from "react-redux/es/hooks/useSelector";
-import type { RootState } from "../store";
-
-// const useToken = () => {
-//   return useSelector((state: RootState) => state.account.token);
-// };
-
-// `${API_BASE_URL}/register`
-
-// const useToken = () => {
-//   return useSelector((state: RootState) => state.account.token);
-// };
 
 export const register = async (username: string, password: string) => {
   try {
@@ -61,7 +49,6 @@ export const fetchSignInDetails = async (
 export const fetchOtherUserId = async (otherUsername: string) => {
   try {
     const token = store.getState().account.token;
-    console.log(otherUsername);
     const response = await axios.get(
       `http://localhost:8080/accounts/username/${otherUsername}`,
       {
