@@ -17,6 +17,17 @@ const TransactionForm = () => {
     setActiveButton(buttonType);
   };
 
+  const resetForm = () => {
+    const usernameInput = document.getElementById("username-input") as HTMLInputElement;
+    const amountInput = document.getElementById("amount-input") as HTMLInputElement;
+
+    setOtherUsername("");
+    setAmount(0.0);
+    
+    usernameInput.value = "";
+    amountInput.value = "";
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     
     event.preventDefault();
@@ -32,14 +43,20 @@ const TransactionForm = () => {
         );
         console.log(response);
         console.log("Sending money...");
+        resetForm();
       } catch (error) {
         console.error(error);
       }
     } else if (activeButton === "Request Money") {
       try {
-        const response = await transactionRequest(otherUserId, account_id, amount);
+        const response = await transactionRequest(
+          otherUserId, 
+          account_id, 
+          amount
+        );
         console.log(response);
         console.log("Requesting money...");
+        resetForm();
       } catch (error) {
         console.error(error);
       }
@@ -62,6 +79,7 @@ const TransactionForm = () => {
         {/* for later: create alternating labels for other user's username: send to: & request from: */}
 
         <input 
+          id="username-input"
           type="text" 
           placeholder="Enter username"
           onChange={(event) => {
@@ -72,6 +90,7 @@ const TransactionForm = () => {
         <br />
 
         <input
+          id="amount-input"
           type="number"
           min="0.00"
           step="0.01"

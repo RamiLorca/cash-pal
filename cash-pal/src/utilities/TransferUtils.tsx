@@ -28,7 +28,6 @@ export const transactionRequest = async (
     );
 
     if (response.status === 200 || response.status === 201) {
-      //clear input fields and display success message
       // trigger function(s) to create transaction object and save it to the store
       return response.data;
     }
