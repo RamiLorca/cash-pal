@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { fetchSignInDetails } from '../../utilities/UserUtils';
 import {
-  setAccountBalance,
+  // setAccountBalance,
   setActivated,
   setAuthorities,
   setAccountId,
@@ -10,7 +10,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
 
-function SignInForm() {
+const SignInForm = () => {
 
   const dispatch = useDispatch();
 
@@ -18,8 +18,8 @@ function SignInForm() {
     account: state.account,
   }));
 
-  const accountId = useSelector((state: RootState) => state.account.account_id);
-  const { token } = useSelector((state: RootState) => state.account);
+  // const accountId = useSelector((state: RootState) => state.account.account_id);
+  // const { token } = useSelector((state: RootState) => state.account);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

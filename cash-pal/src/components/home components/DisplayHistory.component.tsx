@@ -1,9 +1,24 @@
-import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import Transfer from "./Transfer.component";
 
 const DisplayHistory = () => {
+
+  const transfers = useSelector((state: RootState) => state.transfer.transfers);
+
     return (
-      <div>DisplayHistory.component</div>
-    )
-  }
+      <div>
+        <h1>DisplayHistory.component</h1>
+        {transfers.map((transfer) => (
+          <Transfer
+            key={transfer.transfer_id}
+            sender={transfer.sender_username}
+            receiver={transfer.receiver_username}
+            amount={transfer.amount}
+          />
+        ))}
+      </div>
+    );
+};
   
-  export default DisplayHistory;
+export default DisplayHistory;

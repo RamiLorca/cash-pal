@@ -5,11 +5,11 @@ export interface Transfer {
     transfer_id: number;
     transfer_status: string;
     sender_id: number;
+    sender_username: string;
     receiver_id: number;
+    receiver_username: string;
     time_sent: Date | null;
 }
-
-
 
 export interface TransferState {
     transfer: Transfer,
@@ -22,7 +22,9 @@ const initialStateValue: TransferState = {
         transfer_id: 0,
         transfer_status: '',
         sender_id: 0,
+        sender_username: '',
         receiver_id: 0,
+        receiver_username: '',
         time_sent: null
     },
     transfers: []
@@ -39,7 +41,9 @@ export const transferSlice = createSlice({
                 transfer_id: 0,
                 transfer_status: '',
                 sender_id: 0,
+                sender_username: '',
                 receiver_id: 0,
+                receiver_username: '',
                 time_sent: null
             };
         },
@@ -59,9 +63,17 @@ export const transferSlice = createSlice({
             if(state.transfer)
                 state.transfer.sender_id = action.payload;
         },
+        setSenderUsername: (state, action: PayloadAction<string>) => {
+            if(state.transfer)
+                state.transfer.sender_username = action.payload;
+        },
         setReceiverId: (state, action: PayloadAction<number>) => {
             if(state.transfer)
                 state.transfer.receiver_id = action.payload;
+        },
+        setReceiverUsername: (state, action: PayloadAction<string>) => {
+            if(state.transfer)
+                state.transfer.receiver_username = action.payload;
         },
         setTimeSent: (state, action: PayloadAction<Date>) => {
             if(state.transfer)
@@ -75,7 +87,9 @@ export const {
     setTransferId,
     setTransferStatus,
     setSenderId,
+    setSenderUsername,
     setReceiverId,
+    setReceiverUsername,
     setTimeSent,
     addTransfer
 } = transferSlice.actions;

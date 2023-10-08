@@ -5,7 +5,7 @@ const DisplayUsername = () => {
   
   const { account } = useSelector ((state: RootState) => ({
     account: state.account
-  }))
+  }));
 
   return (
     <div>
