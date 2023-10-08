@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../store";
+import { updateTransfers } from "../features/transfer";
 
 export const transactionRequest = async (
   senderId: number,
@@ -33,6 +34,32 @@ export const transactionRequest = async (
     }
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to initiate transaction.");
+    throw new Error("Failed to initiate transaction");
+  }
+};
+
+export const fetchTransfers = async (userId: number) => {
+
+  try {
+    const token = store.getState().account.token;
+
+    const response = await axios.get(
+      `http://localhost:8080/transfer/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const transfers = response.data;
+    
+    store.dispatch(updateTransfers(transfers));
+
+    return transfers;
+
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to fetch transfers");
   }
 };

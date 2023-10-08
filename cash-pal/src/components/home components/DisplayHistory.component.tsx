@@ -8,7 +8,7 @@ const DisplayHistory = () => {
 
     return (
       <div>
-        <h1>DisplayHistory.component</h1>
+        <h1>Transfer History :</h1>
         {transfers.map((transfer) => (
           <Transfer
             key={transfer.transfer_id}

@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import DisplayBalance from "../components/home components/DisplayBalance.component";
 import TransactionForm from "../components/home components/TransactionForm.component";
 import DisplayHistory from "../components/home components/DisplayHistory.component";
-import DisplayPending from "../components/home components/DisplayPending.component";
 
 const Home = () => {
   return (
@@ -13,8 +12,6 @@ const Home = () => {
       <TransactionForm />
       <br />
       <DisplayHistory />
-      <br />
-      <DisplayPending />
     </>
   )
 }

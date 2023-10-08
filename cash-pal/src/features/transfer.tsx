@@ -34,6 +34,9 @@ export const transferSlice = createSlice({
     name: 'transfer',
     initialState: initialStateValue,
     reducers: {
+        updateTransfers: (state, action: PayloadAction<Transfer[]>) => {
+            state.transfers = action.payload;
+        },
         addTransfer: (state) => {
             state.transfers.push(state.transfer);
             state.transfer =  {
@@ -91,7 +94,8 @@ export const {
     setReceiverId,
     setReceiverUsername,
     setTimeSent,
-    addTransfer
+    addTransfer,
+    updateTransfers
 } = transferSlice.actions;
 
 export default transferSlice.reducer;
