@@ -15,7 +15,9 @@ import {
 export const transactionRequest = async (
   senderId: number,
   receiverId: number,
-  amount: number
+  amount: number,
+  accountUsername: string,
+  otherUsername: string
 ) => {
   try {
     const token = store.getState().account.token;
@@ -30,6 +32,8 @@ export const transactionRequest = async (
         sender_id: senderId,
         receiver_id: receiverId,
         amount: amount,
+        account_username: accountUsername,
+        other_username: otherUsername
       },
       {
         headers: {

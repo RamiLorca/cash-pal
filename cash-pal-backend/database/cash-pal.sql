@@ -23,8 +23,11 @@ CREATE SEQUENCE seq_transfer_id
 CREATE TABLE transfer (
     transfer_id int NOT NULL DEFAULT nextval('seq_transfer_id'),
     transfer_status varchar(50) NOT NULL,
+	initiator_username varchar(50) NOT NULL,
     sender_id int NOT NULL,
+	sender_username varchar(50) NOT NULL,
     receiver_id int NOT NULL,
+	receiver_username varchar(50) NOT NULL,
     amount numeric(13, 2) NOT NULL,
     time_sent timestamp NOT NULL,
     CONSTRAINT PK_transfer PRIMARY KEY (transfer_id)
@@ -43,14 +46,14 @@ INSERT INTO account (username, password_hash, balance)
 
 --Adding Transactions--
 
-INSERT INTO transfer (transfer_status, sender_id, receiver_id, amount, time_sent)
-    VALUES ('Accepted', 2001, 2002, 50, '2023-08-31 17:06:20.24378');
+INSERT INTO transfer (transfer_status, initiator_username, sender_id, sender_username, receiver_id, receiver_username, amount, time_sent)
+    VALUES ('Completed', 'eric_cameron_1', 2001, 'eric_cameron_1', 2002, 'sean_oberc_2', 50, '2023-08-31 17:06:20.24378');
 
-INSERT INTO transfer (transfer_status, sender_id, receiver_id, amount, time_sent)
-    VALUES ('Pending', 2003, 2001, 100, '2023-08-31 17:06:20.24378');
+INSERT INTO transfer (transfer_status, initiator_username, sender_id, sender_username, receiver_id, receiver_username, amount, time_sent)
+    VALUES ('Pending', 'admin_1', 2003, 'admin_1', 2001, 'eric_cameron_1', 100, '2023-08-31 17:06:20.24378');
 
-INSERT INTO transfer (transfer_status, sender_id, receiver_id, amount, time_sent)
-    VALUES ('Cancelled', 2002, 2001, 100, '2023-08-31 17:06:20.24378');
+INSERT INTO transfer (transfer_status, initiator_username, sender_id, sender_username, receiver_id, receiver_username, amount, time_sent)
+    VALUES ('Cancelled', 'sean_oberc_2', 2002, 'sean_oberc_2', 2001, 'eric_cameron_1', 100, '2023-08-31 17:06:20.24378');
 
 COMMIT;
 

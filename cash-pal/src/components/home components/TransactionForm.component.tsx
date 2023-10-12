@@ -23,6 +23,10 @@ const TransactionForm = () => {
     account_id: state.account.account_id,
   }));
 
+  const { account_username } = useSelector((state: RootState) => ({
+    account_username: state.account.username,
+  }));
+
   // const { account } = useSelector ((state: RootState) => ({
   //   account: state.account
   // }));
@@ -69,7 +73,9 @@ const TransactionForm = () => {
         const response = await transactionRequest(
           account_id,
           otherUserId,
-          currentAmount
+          currentAmount,
+          account_username,
+          otherUserId
         );
         console.log(response);
 
@@ -86,7 +92,9 @@ const TransactionForm = () => {
         const response = await transactionRequest(
           otherUserId, 
           account_id, 
-          currentAmount
+          currentAmount,
+          account_username,
+          otherUserId
         );
         console.log(response);
 
