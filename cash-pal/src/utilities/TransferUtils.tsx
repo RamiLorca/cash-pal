@@ -4,7 +4,9 @@ import {
       addTransfer, 
       setAmount, 
       setReceiverId, 
+      setReceiverUsername, 
       setSenderId,  
+      setSenderUsername,  
       setTimeSent, 
       setTransferId, 
       setTransferStatus,
@@ -85,6 +87,8 @@ export const fetchTransfers = async (userId: number) => {
       store.dispatch(setSenderId(transfer.sender_id));
       store.dispatch(setReceiverId(transfer.receiver_id));
       store.dispatch(setTimeSent(transfer.time_sent));
+      store.dispatch(setSenderUsername(transfer.sender_username));
+      store.dispatch(setReceiverUsername(transfer.receiver_username));
 
       store.dispatch(addTransfer());
     });

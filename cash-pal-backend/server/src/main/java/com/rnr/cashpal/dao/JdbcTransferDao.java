@@ -169,6 +169,9 @@ public class JdbcTransferDao implements TransferDao{
         transfer.setTransferId(result.getInt("transfer_id"));
         transfer.setAmount(result.getBigDecimal("amount"));
         transfer.setTimeSent((result.getTimestamp("time_sent")).toLocalDateTime());
+        transfer.setInitiatorUsername(result.getString("initiator_username"));
+        transfer.setSenderUsername(result.getString("sender_username"));
+        transfer.setReceiverUsername(result.getString("receiver_username"));
         return transfer;
     }
 }
