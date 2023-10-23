@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class JdbcTransferDaoTests extends BaseDaoTests {
-    private static final Transfer TEST_TRANSFER_1 = new Transfer(3001, "Pending", 2001, 2002,
+    private static final Transfer TEST_TRANSFER_1 = new Transfer(3001, "Pending", "eric_cameron_1", 2001, "eric_cameron_1", 2002, "sean_oberc_2",
                                                     new BigDecimal("150.00"), LocalDateTime.of(2023, 4,
                                          27, 12, 18, 41));
 
@@ -26,7 +26,7 @@ public class JdbcTransferDaoTests extends BaseDaoTests {
 
     @Test
     public void initiateTransferTest() {
-        boolean isInitiated = sut.initiateTransfer(2002, 2001, new BigDecimal("300.00"));
+        boolean isInitiated = sut.initiateTransfer("eric_cameron_1",2002, "eric_cameron_1", 2002, "sean_oberc_2", new BigDecimal("300.00"));
         Assert.assertTrue(isInitiated);
         Transfer transfer = sut.getTransferDetailsById(3002);
         Assert.assertEquals(3002, transfer.getTransferId());

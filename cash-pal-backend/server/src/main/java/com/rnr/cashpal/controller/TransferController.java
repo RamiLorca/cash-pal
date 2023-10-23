@@ -28,13 +28,16 @@ public class TransferController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public void initiateTransfer(@RequestBody Transfer transfer) {
+        String initiatorUsername = transfer.getInitiatorUsername();
         int senderId = transfer.getSenderId();
+        String senderUsername = transfer.getSenderUsername();
         int receiverId = transfer.getReceiverId();
+        String receiverUsername = transfer.getReceiverUsername();
         BigDecimal amount = transfer.getAmount();
 
         System.out.println(transfer);
 
-        if(!transferDao.initiateTransfer(senderId, receiverId, amount)){
+        if(!transferDao.initiateTransfer(initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount)){
             System.out.println(transfer);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer initialization failed.");
         }

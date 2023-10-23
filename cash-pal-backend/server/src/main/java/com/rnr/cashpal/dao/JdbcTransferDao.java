@@ -26,9 +26,12 @@ public class JdbcTransferDao implements TransferDao{
     // we have realized that this initiateTransfer could be used in both situations. Therefore, we are keeping it
     // to a single method to handle initiated sends and requested transfers.
     @Override
-    public boolean initiateTransfer(int senderId, int receiverId, BigDecimal amount) {
-        String sql = "INSERT INTO transfer (transfer_status, sender_id, " +
-                "receiver_id, amount, time_sent) VALUES ('Pending', ?, ?, ?, ?) RETURNING transfer_id";
+    public boolean initiateTransfer(String initiatorUsername, int senderId, String senderUsername, int receiverId, String receiverUsername, BigDecimal amount) {
+
+        String transferStatus = getTransferStatus(initiatorUsername, senderUsername);
+
+        String sql = "INSERT INTO transfer (transfer_status, initiator_username, sender_id, sender_username, " +
+                "receiver_id, receiver_username, amount, time_sent) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING transfer_id";
         LocalDateTime timestamp = LocalDateTime.now();
 
         try {
@@ -37,9 +40,10 @@ public class JdbcTransferDao implements TransferDao{
                 return false;
             }
 
-            Integer result = jdbcTemplate.queryForObject(sql, Integer.class, senderId, receiverId, amount, timestamp);
+            Integer result = jdbcTemplate.queryForObject(sql, Integer.class, transferStatus, initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount, timestamp);
 
         } catch (DataAccessException e) {
+            System.out.println("Failed to store new transfer in database.");
             return false;
         }
         return true;
@@ -147,6 +151,14 @@ public class JdbcTransferDao implements TransferDao{
         }
 
         return true;
+    }
+
+    public String getTransferStatus(String initiatorUsername, String senderUsername) {
+        if(initiatorUsername.equals(senderUsername)) {
+            return "Complete";
+        } else {
+            return "Pending";
+        }
     }
 
     public Transfer mapRowToTransfer (SqlRowSet result) {

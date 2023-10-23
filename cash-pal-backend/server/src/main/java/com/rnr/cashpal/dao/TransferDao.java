@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TransferDao {
 
-    public boolean initiateTransfer(int senderId, int receiverId, BigDecimal amount);
+    public boolean initiateTransfer(String initiatorUsername, int senderId, String senderUsername, int receiverId, String receiverUsername, BigDecimal amount);
 
     public boolean acceptTransfer(int transferId);
 

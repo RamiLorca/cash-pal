@@ -18,10 +18,19 @@ public class Transfer {
     @JsonProperty("time_sent")
     private LocalDateTime timeSent;
 
+    @JsonProperty("sender_username")
+    private String senderUsername;
+
+    @JsonProperty("receiver_username")
+    private String receiverUsername;
+
+    @JsonProperty("initiator_username")
+    private String initiatorUsername;
+
     public Transfer() {
     }
 
-    public Transfer(int transferId, String transferStatus, int senderId, int receiverId, BigDecimal amount, LocalDateTime timeSent) {
+    public Transfer(int transferId, String transferStatus, String initiatorUsername, int senderId, String senderUsername, int receiverId, String receiverUsername, BigDecimal amount, LocalDateTime timeSent) {
         this.transferId = transferId;
         this.transferStatus = transferStatus;
         this.senderId = senderId;
@@ -30,7 +39,7 @@ public class Transfer {
         this.timeSent = timeSent;
     }
 
-    public Transfer(String transferStatus, int senderId, int receiverId, BigDecimal amount, LocalDateTime timeSent) {
+    public Transfer(String transferStatus, String initiatorUsername, int senderId, String senderUsername, int receiverId, String receiverUsername, BigDecimal amount, LocalDateTime timeSent) {
         this.transferStatus = transferStatus;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -84,6 +93,30 @@ public class Transfer {
 
     public void setTimeSent(LocalDateTime timeSent) {
         this.timeSent = timeSent;
+    }
+
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    public void setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
+    }
+
+    public String getReceiverUsername() {
+        return receiverUsername;
+    }
+
+    public void setReceiverUsername(String receiverUsername) {
+        this.receiverUsername = receiverUsername;
+    }
+
+    public String getInitiatorUsername() {
+        return initiatorUsername;
+    }
+
+    public void setInitiatorUsername(String initiatorUsername) {
+        this.initiatorUsername = initiatorUsername;
     }
 
     @Override
