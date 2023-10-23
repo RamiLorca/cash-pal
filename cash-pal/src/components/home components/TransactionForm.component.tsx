@@ -149,21 +149,6 @@ const TransactionForm = () => {
             setCurrentAmount(parseFloat(formattedValue));
           }}
         />
-
-        {/* <CurrencyInput
-          id="amount-input"
-          name="amount"
-          placeholder="\$0.00"
-          decimalsLimit={2}
-          prefix="$"
-          value={currentAmount}
-          onValueChange={(value) => {
-            const parsedValue = parseFloat(value || "0.00");
-            setCurrentAmount(parsedValue);
-          }}
-        /> */}
-
-
         
         <br />
 

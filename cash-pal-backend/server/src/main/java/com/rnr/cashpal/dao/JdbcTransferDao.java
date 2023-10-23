@@ -22,9 +22,6 @@ public class JdbcTransferDao implements TransferDao{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // We were working on creating a second method that will request funds rather than initiate a send, however
-    // we have realized that this initiateTransfer could be used in both situations. Therefore, we are keeping it
-    // to a single method to handle initiated sends and requested transfers.
     @Override
     public boolean initiateTransfer(String initiatorUsername, int senderId, String senderUsername, int receiverId, String receiverUsername, BigDecimal amount) {
 

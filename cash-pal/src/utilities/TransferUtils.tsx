@@ -14,7 +14,6 @@ import {
       updateTransfers 
 } from "../features/transfer";
 
-//leaving accountUsername since user will always be initiator, but changing otherUsername
 export const transactionRequest = async (
   initiatorUsername: string,
   senderId: number,
@@ -22,7 +21,6 @@ export const transactionRequest = async (
   receiverId: number,
   receiverUsername: string,
   amount: number
-  // otherUsername: string,
 ) => {
   try {
     const token = store.getState().account.token;
@@ -49,7 +47,7 @@ export const transactionRequest = async (
     );
 
     if (response.status === 200 || response.status === 201) {
-      // trigger function(s) to create transaction object and save it to the store
+
       return response.data;
     }
   } catch (error) {
@@ -77,8 +75,6 @@ export const fetchTransfers = async (userId: number) => {
     }
 
     const transfers = response.data;
-
-    // need to add sender and receiver usernames, either to database or import it from other component
   
     transfers.forEach((transfer: Transfer) => {
       store.dispatch(setAmount(transfer.amount));
