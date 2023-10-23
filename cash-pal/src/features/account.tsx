@@ -35,6 +35,15 @@ export const accountSlice = createSlice({
       const token = action.payload.token;
       document.cookie = `token=${token}; path=/; Secure; HttpOnly`;
     },
+    logout: (state) => {
+      state.account_id = 0;
+      state.password = "";
+      state.username = "";
+      state.activated = false;
+      state.balance = 0;
+      state.authorities = null;
+      state.token = null;
+    },
     setAccountBalance: (state, action: PayloadAction<number>) => {
       state.balance = action.payload;
     },
@@ -66,6 +75,7 @@ export const {
   setUsername,
   setAccountId,
   login,
+  logout,
   setPassword,
   setActivated,
   setAuthorities,

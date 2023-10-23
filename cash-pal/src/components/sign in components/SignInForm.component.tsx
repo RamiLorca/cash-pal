@@ -10,9 +10,11 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
 import { fetchTransfers } from '../../utilities/TransferUtils';
+import { useNavigate } from 'react-router-dom';
 
 const SignInForm = () => {
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { account } = useSelector((state: RootState) => ({
@@ -42,6 +44,7 @@ const SignInForm = () => {
       console.log("Logged in as: " + username);
 
       fetchTransfers(response.account.account_id);
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
