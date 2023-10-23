@@ -52,7 +52,7 @@ export const transferSlice = createSlice({
         },
         setAmount: (state, action: PayloadAction<number>) => {
             if(state.transfer)
-                state.transfer.amount = action.payload 
+                state.transfer.amount = action.payload
         },
         setTransferId: (state, action: PayloadAction<number>) => {
             if(state.transfer)

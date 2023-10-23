@@ -4,7 +4,7 @@ type TransferProps = {
   transfer_status: string;
   sender_username: string;
   receiver_username: string;
-  amount: number;
+  amount: string;
 };
 
 const Transfer = ({transfer_id, transfer_status, sender_username, receiver_username, amount}: TransferProps) => {

@@ -6,6 +6,10 @@ const DisplayHistory = () => {
 
   const transfers = useSelector((state: RootState) => state.transfer.transfers);
 
+  const formatToCurrencyString = (number: number): string => {
+    return "$" + (Math.round(number * 100) / 100).toFixed(2);
+  };
+
     return (
       <div>
         <h1>Transfer History :</h1>
@@ -16,7 +20,7 @@ const DisplayHistory = () => {
             transfer_status={transfer.transfer_status}
             sender_username={transfer.sender_username}
             receiver_username={transfer.receiver_username}
-            amount={transfer.amount}
+            amount={formatToCurrencyString(transfer.amount)}
           />
         ))}
       </div>

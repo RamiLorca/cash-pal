@@ -3,6 +3,7 @@ import { transactionRequest, fetchTransfers } from "../../utilities/TransferUtil
 import { RootState } from "../../store";
 import { fetchOtherUserId } from "../../utilities/UserUtils";
 import { useSelector } from "react-redux";
+import CurrencyInput from "react-currency-input-field";
 
 // import { 
 //   addTransfer, 
@@ -32,7 +33,7 @@ const TransactionForm = () => {
   // }));
 
   const [activeButton, setActiveButton] = useState("Send Money");
-  const [currentAmount, setCurrentAmount] = useState(0.0);
+  const [currentAmount, setCurrentAmount] = useState(0.00);
   const [otherUsername, setOtherUsername] = useState("");
 
   const handleButtonClick = (buttonType: string) => {
@@ -41,13 +42,13 @@ const TransactionForm = () => {
 
   const resetForm = () => {
     const usernameInput = document.getElementById("username-input") as HTMLInputElement;
-    const amountInput = document.getElementById("amount-input") as HTMLInputElement;
+    // const amountInput = document.getElementById("amount-input") as HTMLInputElement;
 
     setOtherUsername("");
-    setCurrentAmount(0.0);
+    setCurrentAmount(0.00);
     
     usernameInput.value = "";
-    amountInput.value = "";
+    // amountInput.value = "";
   };
 
   // const createTransfer = (senderId: string, receiverId: string, amount: number) => {
@@ -71,11 +72,12 @@ const TransactionForm = () => {
     if (activeButton === "Send Money") {
       try {
         const response = await transactionRequest(
-          account_id,
-          otherUserId,
-          currentAmount,
           account_username,
-          otherUserId
+          account_id,
+          account_username, 
+          otherUserId,
+          otherUsername,
+          currentAmount
         );
         console.log(response);
 
@@ -90,11 +92,12 @@ const TransactionForm = () => {
     } else if (activeButton === "Request Money") {
       try {
         const response = await transactionRequest(
-          otherUserId, 
-          account_id, 
-          currentAmount,
           account_username,
-          otherUserId
+          otherUserId, 
+          otherUsername,
+          account_id,
+          account_username,
+          currentAmount
         );
         console.log(response);
 
@@ -135,17 +138,33 @@ const TransactionForm = () => {
 
         <br />
 
-        <input
+        <CurrencyInput
           id="amount-input"
-          type="number"
-          min="0.00"
-          step="0.01"
-          placeholder="Enter cash amount"
-          onChange={(event) => {
-            setCurrentAmount(event.target.valueAsNumber);
+          name="amount"
+          placeholder="$0.00"
+          decimalsLimit={2}
+          prefix="$"
+          onValueChange={(value) => {
+            const formattedValue = parseFloat(value || "0").toFixed(2);
+            setCurrentAmount(parseFloat(formattedValue));
           }}
         />
 
+        {/* <CurrencyInput
+          id="amount-input"
+          name="amount"
+          placeholder="\$0.00"
+          decimalsLimit={2}
+          prefix="$"
+          value={currentAmount}
+          onValueChange={(value) => {
+            const parsedValue = parseFloat(value || "0.00");
+            setCurrentAmount(parsedValue);
+          }}
+        /> */}
+
+
+        
         <br />
 
         <input type="submit" value={activeButton} />

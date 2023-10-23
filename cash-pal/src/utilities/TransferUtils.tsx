@@ -12,12 +12,15 @@ import {
       updateTransfers 
 } from "../features/transfer";
 
+//leaving accountUsername since user will always be initiator, but changing otherUsername
 export const transactionRequest = async (
+  initiatorUsername: string,
   senderId: number,
+  senderUsername: string,
   receiverId: number,
-  amount: number,
-  accountUsername: string,
-  otherUsername: string
+  receiverUsername: string,
+  amount: number
+  // otherUsername: string,
 ) => {
   try {
     const token = store.getState().account.token;
@@ -29,11 +32,12 @@ export const transactionRequest = async (
     const response = await axios.post(
       `http://localhost:8080/transfer`,
       {
+        initiator_username: initiatorUsername,
         sender_id: senderId,
+        sender_username: senderUsername,
         receiver_id: receiverId,
-        amount: amount,
-        account_username: accountUsername,
-        other_username: otherUsername
+        receiver_username: receiverUsername,
+        amount: amount
       },
       {
         headers: {
