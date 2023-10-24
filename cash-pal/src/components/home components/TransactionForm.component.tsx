@@ -5,16 +5,7 @@ import { fetchOtherUserId } from "../../utilities/UserUtils";
 import { useSelector } from "react-redux";
 import CurrencyInput from "react-currency-input-field";
 
-// import { 
-//   addTransfer, 
-//   setReceiverUsername, 
-//   setSenderUsername, 
-//   setAmount 
-// } from "../../features/transfer";
-
 const TransactionForm = () => {
-
-  // const dispatch = useDispatch();
 
   const { transfer } = useSelector((state: RootState) => ({
     transfer: state.transfer,
@@ -28,10 +19,6 @@ const TransactionForm = () => {
     account_username: state.account.username,
   }));
 
-  // const { account } = useSelector ((state: RootState) => ({
-  //   account: state.account
-  // }));
-
   const [activeButton, setActiveButton] = useState("Send Money");
   const [currentAmount, setCurrentAmount] = useState(0.00);
   const [otherUsername, setOtherUsername] = useState("");
@@ -42,22 +29,12 @@ const TransactionForm = () => {
 
   const resetForm = () => {
     const usernameInput = document.getElementById("username-input") as HTMLInputElement;
-    // const amountInput = document.getElementById("amount-input") as HTMLInputElement;
 
     setOtherUsername("");
     setCurrentAmount(0.00);
     
     usernameInput.value = "";
-    // amountInput.value = "";
   };
-
-  // const createTransfer = (senderId: string, receiverId: string, amount: number) => {
-    
-  //   dispatch(setSenderUsername(senderId));
-  //   dispatch(setReceiverUsername(receiverId));
-  //   dispatch(setAmount(amount));
-  //   dispatch(addTransfer());
-  // };
 
   useEffect(() => {
     console.log("Current transfers in store: ", transfer.transfers);
@@ -83,7 +60,6 @@ const TransactionForm = () => {
 
         console.log("Sending money...");
 
-        // createTransfer(account.username, otherUsername, currentAmount);
         fetchTransfers(account_id);
         resetForm();
       } catch (error) {
@@ -125,8 +101,6 @@ const TransactionForm = () => {
 
       <form onSubmit={handleSubmit}>
 
-        {/* for later: create alternating labels for other user's username: send to: & request from: */}
-
         <input 
           id="username-input"
           type="text" 
@@ -155,7 +129,7 @@ const TransactionForm = () => {
         <input type="submit" value={activeButton} />
       </form>
     </div>
-  );
-};
+  )
+}
 
 export default TransactionForm;

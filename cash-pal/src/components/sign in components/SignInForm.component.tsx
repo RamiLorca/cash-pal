@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { fetchSignInDetails } from '../../utilities/UserUtils';
 import {
-  // setAccountBalance,
   setActivated,
   setAuthorities,
   setAccountId,
   setToken,
 } from "../../features/account";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../../store";
+import { useDispatch } from "react-redux";
 import { fetchTransfers } from '../../utilities/TransferUtils';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,13 +14,6 @@ const SignInForm = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { account } = useSelector((state: RootState) => ({
-    account: state.account,
-  }));
-
-  // const accountId = useSelector((state: RootState) => state.account.account_id);
-  // const { token } = useSelector((state: RootState) => state.account);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -51,10 +42,6 @@ const SignInForm = () => {
 
   }
 
-  const testStore = () => {
-    console.log(account.balance);
-  }
-
   return (
     <form onSubmit={handleSignIn}>
       <input
@@ -72,7 +59,7 @@ const SignInForm = () => {
       />
 
       <button type="submit">Login</button>
-      <button type='button' onClick={testStore}>Test</button>
+
     </form>
   )
 }
