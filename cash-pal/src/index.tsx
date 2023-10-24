@@ -5,20 +5,24 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import * as dotenv from 'dotenv';
-import store from './store';
+import { store, persistedStore } from './store';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 dotenv.config();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-      <App />
-      </BrowserRouter>
+      <PersistGate loading={null} persistor={persistedStore}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 );

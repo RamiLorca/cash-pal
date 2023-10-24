@@ -1,5 +1,5 @@
 import axios from "axios";
-import store from "../store";
+import { store } from "../store";
 import { setToken, setAccountBalance, setUsername } from "../features/account";
 
 export const register = async (username: string, password: string) => {

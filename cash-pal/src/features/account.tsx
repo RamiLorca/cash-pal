@@ -25,7 +25,7 @@ const initialStateValue: AccountState = {
 };
 
 export const accountSlice = createSlice({
-  name: "account",
+  name: 'account',
   initialState: initialStateValue,
   reducers: {
     login: (state, action: PayloadAction<AccountState>) => {
@@ -79,7 +79,7 @@ export const {
   setPassword,
   setActivated,
   setAuthorities,
-  setToken,
+  setToken
 } = accountSlice.actions;
 
 export default accountSlice.reducer;
