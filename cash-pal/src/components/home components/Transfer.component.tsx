@@ -17,6 +17,9 @@ const Transfer = ({transfer_id, transfer_status, sender_username, receiver_usern
         <p>Sender: {sender_username}</p>
         <p>Receiver: {receiver_username}</p>
         <p>Amount: {amount}</p>
+
+        <button>Accept</button>
+        <button>Reject</button>
       </div>
     )
 };

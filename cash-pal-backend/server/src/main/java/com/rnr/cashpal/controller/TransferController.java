@@ -28,6 +28,7 @@ public class TransferController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public void initiateTransfer(@RequestBody Transfer transfer) {
+
         String initiatorUsername = transfer.getInitiatorUsername();
         int senderId = transfer.getSenderId();
         String senderUsername = transfer.getSenderUsername();
@@ -37,10 +38,22 @@ public class TransferController {
 
         System.out.println(transfer);
 
-        if(!transferDao.initiateTransfer(initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount)){
+        if(!transferDao.initiateTransfer(initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount)) {
             System.out.println(transfer);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer initialization failed.");
         }
+
+        //------ if user sending money, transaction cleared automatically-------//
+
+        if (initiatorUsername == senderUsername) {
+            BigDecimal newSenderBalance = accountDao.subtractFromBalance(senderId, amount);
+            BigDecimal newReceiverBalance = accountDao.addToBalance(receiverId, amount);
+
+            accountDao.updateAccountBalance(senderId, newSenderBalance);
+            accountDao.updateAccountBalance(receiverId, newReceiverBalance);
+        }
+
+        //------ *******************-------//
     }
 
     @RequestMapping(path = "/transfers/{accountId}", method = RequestMethod.GET)
