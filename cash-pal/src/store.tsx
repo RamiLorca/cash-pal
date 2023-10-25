@@ -19,7 +19,8 @@ export interface RootState {
 
 const persistConfig = {
     key: 'root',
-    storage
+    storage,
+    blacklist: ['transfers']
 };
 
 const rootReducer = persistReducer(persistConfig, combineReducers({

@@ -20,20 +20,18 @@ const TransactionForm = () => {
   }));
 
   const [activeButton, setActiveButton] = useState("Send Money");
-  const [currentAmount, setCurrentAmount] = useState(0.00);
+  const [currentAmount, setCurrentAmount] = useState(0);
   const [otherUsername, setOtherUsername] = useState("");
+  const [amountInputValue, setAmountInputValue] = useState("");
 
   const handleButtonClick = (buttonType: string) => {
     setActiveButton(buttonType);
   };
 
   const resetForm = () => {
-    const usernameInput = document.getElementById("username-input") as HTMLInputElement;
-
     setOtherUsername("");
-    setCurrentAmount(0.00);
-    
-    usernameInput.value = "";
+    setCurrentAmount(0);
+    setAmountInputValue("");
   };
 
   useEffect(() => {
@@ -99,12 +97,13 @@ const TransactionForm = () => {
         Request Money
       </button>
 
-      <form onSubmit={handleSubmit}>
+      <form id="transfer-form" onSubmit={handleSubmit}>
 
         <input 
           id="username-input"
           type="text" 
           placeholder="Enter username"
+          value={otherUsername}
           onChange={(event) => {
             setOtherUsername(event.target.value);
           }} 
@@ -118,9 +117,11 @@ const TransactionForm = () => {
           placeholder="$0.00"
           decimalsLimit={2}
           prefix="$"
+          value={amountInputValue}
           onValueChange={(value) => {
             const formattedValue = parseFloat(value || "0").toFixed(2);
             setCurrentAmount(parseFloat(formattedValue));
+            setAmountInputValue(value || "");
           }}
         />
         
