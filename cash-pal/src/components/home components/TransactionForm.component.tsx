@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { transactionRequest, fetchTransfers } from "../../utilities/TransferUtils";
 import { RootState } from "../../store";
 import { fetchOtherUserId } from "../../utilities/UserUtils";
@@ -6,10 +6,6 @@ import { useSelector } from "react-redux";
 import CurrencyInput from "react-currency-input-field";
 
 const TransactionForm = () => {
-
-  const { transfer } = useSelector((state: RootState) => ({
-    transfer: state.transfer,
-  }));
 
   const { account_id } = useSelector((state: RootState) => ({
     account_id: state.account.account_id,
@@ -33,10 +29,6 @@ const TransactionForm = () => {
     setCurrentAmount(0);
     setAmountInputValue("");
   };
-
-  useEffect(() => {
-    console.log("Current transfers in store: ", transfer.transfers);
-  }, [transfer]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     
