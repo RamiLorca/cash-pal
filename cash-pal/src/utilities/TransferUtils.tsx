@@ -22,13 +22,14 @@ export const transactionRequest = async (
   receiverUsername: string,
   amount: number
 ) => {
+
   try {
     const token = store.getState().account.token;
 
     if (receiverId === 0) {
       throw new Error("Invalid receiverId");
     }
-
+    
     const response = await axios.post(
       `http://localhost:8080/transfer`,
       {
@@ -99,10 +100,9 @@ export const fetchTransfers = async (userId: number) => {
 };
 
 export const processPendingTransfer = async (transferId: number, isAccepted: boolean) => {
-    
+
   try{
     const token = store.getState().account.token;
-
     const response = await axios.put(
       `http://localhost:8080/transfer`,
       {
@@ -117,10 +117,9 @@ export const processPendingTransfer = async (transferId: number, isAccepted: boo
     );
 
     if (response.status === 200 || response.status === 201) {
-
       return response.data;
     }
-
+    
   } catch (error) {
     console.error(error);
     throw new Error("Failed to process transfer");
