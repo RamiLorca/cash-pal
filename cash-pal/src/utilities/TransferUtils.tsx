@@ -95,4 +95,34 @@ export const fetchTransfers = async (userId: number) => {
     console.error(error);
     throw new Error("Failed to fetch transfers");
   }
+
+};
+
+export const processPendingTransfer = async (transferId: number, isAccepted: boolean) => {
+    
+  try{
+    const token = store.getState().account.token;
+
+    const response = await axios.put(
+      `http://localhost:8080/transfer`,
+      {
+        transferId: transferId,
+        isAccepted: isAccepted
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200 || response.status === 201) {
+
+      return response.data;
+    }
+
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to process transfer");
+  }
 };

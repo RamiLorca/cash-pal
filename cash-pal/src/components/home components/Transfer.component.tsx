@@ -1,3 +1,6 @@
+import { processPendingTransfer, fetchTransfers } from "../../utilities/TransferUtils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 type TransferProps = {
   transfer_id: number;
@@ -9,19 +12,34 @@ type TransferProps = {
 
 const Transfer = ({transfer_id, transfer_status, sender_username, receiver_username, amount}: TransferProps) => {
 
-    return (
-      <div>
-        <h3>Transfer:</h3>
-        <p>Id: {transfer_id}</p>
-        <p>Status: {transfer_status}</p>
-        <p>Sender: {sender_username}</p>
-        <p>Receiver: {receiver_username}</p>
-        <p>Amount: {amount}</p>
+  const { account_id } = useSelector((state: RootState) => ({
+    account_id: state.account.account_id,
+  }));
 
-        <button>Accept</button>
-        <button>Reject</button>
-      </div>
-    )
+  const handleClick = async (isAccepted: boolean) => {
+    try {
+      const response = await processPendingTransfer(transfer_id, isAccepted);
+      console.log(response);
+      fetchTransfers(account_id);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return (
+    <div>
+      <h3>Transfer:</h3>
+      <p>Id: {transfer_id}</p>
+      <p>Status: {transfer_status}</p>
+      <p>Sender: {sender_username}</p>
+      <p>Receiver: {receiver_username}</p>
+      <p>Amount: {amount}</p>
+
+      <button onClick={() => handleClick(true)}>Accept</button>
+      <button onClick={() => handleClick(false)}>Reject</button>
+    </div>
+  )
 };
   
 export default Transfer;
