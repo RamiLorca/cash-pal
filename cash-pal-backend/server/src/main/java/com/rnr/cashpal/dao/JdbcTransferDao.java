@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +64,20 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     @Override
-    public boolean cancelTransfer(int transferId) {
+    public boolean cancelTransfer(int transferId, Principal principal) {
+        Transfer transfer = getTransferDetailsById(transferId);
 
         try {
-            String sql = "UPDATE transfer SET transfer_status = 'Cancelled' WHERE transfer_id = ?";
-            jdbcTemplate.update(sql, transferId);
-            return true;
+            if (principal.getName().equals(transfer.getInitiatorUsername())) {
+                String sql = "UPDATE transfer SET transfer_status = 'Cancelled' WHERE transfer_id = ?";
+                jdbcTemplate.update(sql, transferId);
+                return true;
+            }
+            else {
+                String sql = "UPDATE transfer SET transfer_status = 'Rejected' WHERE transfer_id = ?";
+                jdbcTemplate.update(sql, transferId);
+                return true;
+            }
         }
         catch (DataAccessException e) {
             System.out.println("Failed to cancel transfer.");

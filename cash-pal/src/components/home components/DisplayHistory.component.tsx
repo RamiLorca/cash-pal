@@ -5,6 +5,7 @@ import Transfer from "./Transfer.component";
 const DisplayHistory = () => {
 
   const transfers = useSelector((state: RootState) => state.transfer.transfers);
+  const sortedTransfers = [...transfers].sort((a, b) => b.transfer_id - a.transfer_id);
 
   const formatToCurrencyString = (number: number): string => {
     return "$" + (Math.round(number * 100) / 100).toFixed(2);
@@ -22,7 +23,7 @@ const DisplayHistory = () => {
   return (
     <div>
     <h1>Transfer History :</h1>
-    {transfers
+    {sortedTransfers
       .filter((transfer) => transfer !== null)
       .map((transfer) => (
         <Transfer

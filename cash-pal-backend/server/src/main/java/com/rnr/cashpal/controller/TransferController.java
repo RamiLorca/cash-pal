@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
@@ -93,7 +94,7 @@ public class TransferController {
     }
     //used to have OK response annotation here
     @RequestMapping(path = "/transfer", method = RequestMethod.PUT)
-    public void acceptOrRejectTransfer (@RequestBody AcceptOrRejectTransferDTO transferDTO) {
+    public void acceptOrRejectTransfer (@RequestBody AcceptOrRejectTransferDTO transferDTO, Principal principal) {
         Transfer transfer = transferDao.getTransferDetailsById(transferDTO.getTransferId());
 
         if (transferDTO.isAccepted()) {
@@ -106,7 +107,7 @@ public class TransferController {
             transferDao.acceptTransfer(transfer.getTransferId());
         }
         else {
-            transferDao.cancelTransfer(transfer.getTransferId());
+            transferDao.cancelTransfer(transfer.getTransferId(), principal);
         }
     }
 
