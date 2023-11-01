@@ -50,6 +50,9 @@ export const transferSlice = createSlice({
                 time_sent: null
             };
         },
+        clearTransferHistory: (state) => {
+            state.transfers = [];
+        },
         setAmount: (state, action: PayloadAction<number>) => {
             if(state.transfer)
                 state.transfer.amount = action.payload
@@ -95,7 +98,8 @@ export const {
     setReceiverUsername,
     setTimeSent,
     addTransfer,
-    updateTransfers
+    updateTransfers,
+    clearTransferHistory
 } = transferSlice.actions;
 
 
