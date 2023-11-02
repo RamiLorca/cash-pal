@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import DisplayUsername from "../components/home components/DisplayUsername.component";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -23,6 +23,7 @@ const NavigationBar = () => {
     if (isIdle) {
       setState('Idle');
       handleSignOut();
+      //routing to sign in screen 
     } else if (isPrompted) {
       setState('Prompted')
     } else if (isActive) {
@@ -62,10 +63,13 @@ const NavigationBar = () => {
   const handleSignOut = () => {
     dispatch(logout());
     dispatch(clearTransferHistory());
+    navigate(signInScreenPath);
   };
 
   const atSignInScreen = location.pathname === '/signin';
   const hideNavigation = !isLoggedIn && atSignInScreen;
+  const signInScreenPath = '/signin';
+  const navigate = useNavigate();
 
   return (
     <>

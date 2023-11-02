@@ -1,11 +1,19 @@
-import type { RootState } from "../../store";
-import { useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "../../store";
+import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from 'react';
+import { listenForAccountUpdates } from "../../utilities/AccountActions";
 
 const DisplayBalance = () => {
   
   const { account } = useSelector ((state: RootState) => ({
     account: state.account
   }))
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(listenForAccountUpdates());
+  }, [dispatch]);
 
   return (
     <div>

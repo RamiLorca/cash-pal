@@ -4,12 +4,13 @@ import com.rnr.cashpal.dao.AccountDao;
 import com.rnr.cashpal.dao.TransferDao;
 import com.rnr.cashpal.model.AcceptOrRejectTransferDTO;
 import com.rnr.cashpal.model.Transfer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
@@ -22,9 +23,14 @@ public class TransferController {
     private TransferDao transferDao;
     private AccountDao accountDao;
 
-    public TransferController(TransferDao transferDao, AccountDao accountDao) {
+    private final SimpMessagingTemplate messagingTemplate;
+
+
+    @Autowired
+    public TransferController(TransferDao transferDao, AccountDao accountDao, SimpMessagingTemplate messagingTemplate) {
         this.transferDao = transferDao;
         this.accountDao = accountDao;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,6 +55,9 @@ public class TransferController {
 
                 accountDao.updateAccountBalance(senderId, newSenderBalance);
                 accountDao.updateAccountBalance(receiverId, newReceiverBalance);
+
+                //websocket sends updated balance
+                messagingTemplate.convertAndSendToUser(senderUsername, "/queue/balance", newSenderBalance);
             }
 
             if(!result) {
@@ -59,15 +68,6 @@ public class TransferController {
         catch (DataAccessException e) {
             System.out.println(e.getMessage());
         }
-
-//        if(!transferDao.initiateTransfer(initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount)) {
-//            System.out.println(transfer);
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer initialization failed.");
-//        }
-
-        //------ if user sending money, transaction cleared automatically-------//
-
-        //------ *******************-------//
     }
 
     @RequestMapping(path = "/transfers/{accountId}", method = RequestMethod.GET)
@@ -118,6 +118,9 @@ public class TransferController {
             accountDao.updateAccountBalance(transfer.getReceiverId(), newReceiverBalance);
 
             transferDao.acceptTransfer(transfer.getTransferId());
+
+            //websocket sends updated balance
+            messagingTemplate.convertAndSendToUser(transfer.getSenderUsername(), "/queue/balance", newSenderBalance);
         }
         else {
             transferDao.cancelTransfer(transfer.getTransferId(), principal);
