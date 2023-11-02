@@ -4,6 +4,7 @@ import com.rnr.cashpal.dao.AccountDao;
 import com.rnr.cashpal.dao.TransferDao;
 import com.rnr.cashpal.model.AcceptOrRejectTransferDTO;
 import com.rnr.cashpal.model.Transfer;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,20 +40,32 @@ public class TransferController {
 
         System.out.println(transfer);
 
-        if(!transferDao.initiateTransfer(initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount)) {
-            System.out.println(transfer);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer initialization failed.");
+        try{
+            boolean result = transferDao.initiateTransfer(initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount);
+
+            if (result && initiatorUsername.equals(senderUsername)){
+                BigDecimal newSenderBalance = accountDao.subtractFromBalance(senderId, amount);
+                BigDecimal newReceiverBalance = accountDao.addToBalance(receiverId, amount);
+
+                accountDao.updateAccountBalance(senderId, newSenderBalance);
+                accountDao.updateAccountBalance(receiverId, newReceiverBalance);
+            }
+
+            if(!result) {
+                System.out.println(transfer);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer initialization failed.");
+            }
         }
+        catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
+
+//        if(!transferDao.initiateTransfer(initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount)) {
+//            System.out.println(transfer);
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer initialization failed.");
+//        }
 
         //------ if user sending money, transaction cleared automatically-------//
-
-        if (initiatorUsername == senderUsername) {
-            BigDecimal newSenderBalance = accountDao.subtractFromBalance(senderId, amount);
-            BigDecimal newReceiverBalance = accountDao.addToBalance(receiverId, amount);
-
-            accountDao.updateAccountBalance(senderId, newSenderBalance);
-            accountDao.updateAccountBalance(receiverId, newReceiverBalance);
-        }
 
         //------ *******************-------//
     }
