@@ -5,8 +5,15 @@ import Home from './router/Home.component';
 import Settings from './router/Settings.component';
 import SignIn from './router/SignIn.component';
 
+import TransferWebSocketConfig from './utilities/TransferWebSocketConfig';
+
 const App = () => {
+
   return (
+    <>
+
+    <TransferWebSocketConfig />
+
     <Routes>
       <Route path='/' element={<Navigation />}>
         <Route index element={<Home />} />
@@ -14,6 +21,8 @@ const App = () => {
         <Route path='signin' element={<SignIn />} />
       </Route>
     </Routes>
+
+    </>
   );
 }
 

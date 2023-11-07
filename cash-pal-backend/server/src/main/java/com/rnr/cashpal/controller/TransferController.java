@@ -7,8 +7,11 @@ import com.rnr.cashpal.model.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
@@ -22,19 +25,19 @@ public class TransferController {
 
     private TransferDao transferDao;
     private AccountDao accountDao;
-
-    private final SimpMessagingTemplate messagingTemplate;
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public TransferController(TransferDao transferDao, AccountDao accountDao, SimpMessagingTemplate messagingTemplate) {
+    public TransferController(TransferDao transferDao, AccountDao accountDao) {
         this.transferDao = transferDao;
         this.accountDao = accountDao;
-        this.messagingTemplate = messagingTemplate;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
+    @MessageMapping("/initiate-transfer")
+    @SendTo("/topic/transfer-updates")
     public void initiateTransfer(@RequestBody Transfer transfer) {
 
         String initiatorUsername = transfer.getInitiatorUsername();
@@ -56,8 +59,6 @@ public class TransferController {
                 accountDao.updateAccountBalance(senderId, newSenderBalance);
                 accountDao.updateAccountBalance(receiverId, newReceiverBalance);
 
-                //websocket sends updated balance
-                messagingTemplate.convertAndSendToUser(senderUsername, "/queue/balance", newSenderBalance);
             }
 
             if(!result) {
@@ -107,6 +108,8 @@ public class TransferController {
     }
     //used to have OK response annotation here
     @RequestMapping(path = "/transfer", method = RequestMethod.PUT)
+    @MessageMapping("/accept-or-reject-transfer")
+    @SendTo("/topic/transfer-updates")
     public void acceptOrRejectTransfer (@RequestBody AcceptOrRejectTransferDTO transferDTO, Principal principal) {
         Transfer transfer = transferDao.getTransferDetailsById(transferDTO.getTransferId());
 
@@ -119,11 +122,20 @@ public class TransferController {
 
             transferDao.acceptTransfer(transfer.getTransferId());
 
-            //websocket sends updated balance
-            messagingTemplate.convertAndSendToUser(transfer.getSenderUsername(), "/queue/balance", newSenderBalance);
+            messagingTemplate.convertAndSend("/topic/transfer-updates", "Your account balance has been updated. New balance: " + newSenderBalance);
+
+            System.out.println("Sender account balance has been updated. New balance: " + newSenderBalance);
+
+            messagingTemplate.convertAndSend("/topic/transfer-updates", "Your account balance has been updated. New balance: " + newReceiverBalance);
+
+            System.out.println("Receiver account balance has been updated. New balance: " + newReceiverBalance);
         }
         else {
             transferDao.cancelTransfer(transfer.getTransferId(), principal);
+
+            messagingTemplate.convertAndSendToUser(transfer.getSenderUsername(), "/topic/transfer-updates", "Your transfer has been cancelled.");
+
+            messagingTemplate.convertAndSendToUser(transfer.getReceiverUsername(), "/topic/transfer-updates", "The transfer has been cancelled.");
         }
     }
 
