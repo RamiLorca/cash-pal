@@ -13,9 +13,14 @@ const TransferWebSocketConfig = () => {
         console.log('Connected to WebSocket');
         client.subscribe('/topic/transfer-updates', (message) => {
             if(message.body) {
-                var jsonBody = JSON.parse(message.body);
-                if (jsonBody.message) {
-                    console.log("Received message: " + jsonBody.message);
+                console.log('Received raw message:', message.body);
+                try {
+                    var jsonBody = JSON.parse(message.body);
+                    if (jsonBody.message) {
+                        console.log("Received message: " + jsonBody.message);
+                    }
+                } catch (e) {
+                    console.error('Error parsing message body:', e);
                 }
             }
             console.log('Received message:', message.body);

@@ -18,13 +18,13 @@ export interface RootState {
     transfer: TransferState;
 }
 
-export type AppDispatch = typeof store.dispatch;
-export type AppThunk<ReturnType = void> = ThunkAction<
-    ReturnType,
-    RootState,
-    unknown,
-    Action<string>
->;
+// export type AppDispatch = typeof store.dispatch;
+// export type AppThunk<ReturnType = void> = ThunkAction<
+//     ReturnType,
+//     RootState,
+//     unknown,
+//     Action<string>
+// >;
 
 const persistConfig = {
     key: 'root',
@@ -44,7 +44,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(thunk),
+        })
 });
 
 export const persistedStore = persistStore(store);

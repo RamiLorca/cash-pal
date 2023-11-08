@@ -1,9 +1,12 @@
 package com.rnr.cashpal.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rnr.cashpal.dao.AccountDao;
 import com.rnr.cashpal.dao.TransferDao;
 import com.rnr.cashpal.model.AcceptOrRejectTransferDTO;
 import com.rnr.cashpal.model.Transfer;
+import com.rnr.cashpal.websocket.WebSocketMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -11,7 +14,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
@@ -25,6 +27,9 @@ public class TransferController {
 
     private TransferDao transferDao;
     private AccountDao accountDao;
+    private WebSocketMessage message;
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -122,20 +127,31 @@ public class TransferController {
 
             transferDao.acceptTransfer(transfer.getTransferId());
 
-            messagingTemplate.convertAndSend("/topic/transfer-updates", "Your account balance has been updated. New balance: " + newSenderBalance);
+            try {
+                WebSocketMessage message = new WebSocketMessage("New sender balance: " + newSenderBalance);
+                String jsonMessage = objectMapper.writeValueAsString(message);
+                messagingTemplate.convertAndSend("/topic/transfer-updates", jsonMessage);
+                System.out.println("New sender balance: " + newSenderBalance);
 
-            System.out.println("Sender account balance has been updated. New balance: " + newSenderBalance);
+                message = new WebSocketMessage("New receiver balance: " + newReceiverBalance);
+                jsonMessage = objectMapper.writeValueAsString(message);
+                messagingTemplate.convertAndSend("/topic/transfer-updates", jsonMessage);
+                System.out.println("New receiver balance: " + newReceiverBalance);
 
-            messagingTemplate.convertAndSend("/topic/transfer-updates", "Your account balance has been updated. New balance: " + newReceiverBalance);
-
-            System.out.println("Receiver account balance has been updated. New balance: " + newReceiverBalance);
-        }
-        else {
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        } else {
             transferDao.cancelTransfer(transfer.getTransferId(), principal);
+            try {
+                WebSocketMessage message = new WebSocketMessage("Your transfer has been cancelled.");
+                String jsonMessage = objectMapper.writeValueAsString(message);
+                messagingTemplate.convertAndSend("/topic/transfer-updates", jsonMessage);
 
-            messagingTemplate.convertAndSendToUser(transfer.getSenderUsername(), "/topic/transfer-updates", "Your transfer has been cancelled.");
-
-            messagingTemplate.convertAndSendToUser(transfer.getReceiverUsername(), "/topic/transfer-updates", "The transfer has been cancelled.");
+                messagingTemplate.convertAndSend("/topic/transfer-updates", jsonMessage);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();;
+            }
         }
     }
 
