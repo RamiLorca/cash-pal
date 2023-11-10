@@ -65,10 +65,6 @@ const NavigationBar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  // const { isLoggedIn } = useSelector((state: RootState) => ({
-  //   isLoggedIn: state.account.activated,
-  // }));
-
   const { isLoggedIn } = useSelector(isLoggedInSelector);
 
   const handleSignOut = () => {
@@ -86,9 +82,9 @@ const NavigationBar = () => {
     <>
 
       {/* block below allows view of idle timer */}
-      <p>Current State: {state}</p>
+      {/* <p>Current State: {state}</p>
       <p>Action Events: {count}</p>
-      <p>{remaining} seconds remaining</p>
+      <p>{remaining} seconds remaining</p> */}
 
       {!hideNavigation && (
       

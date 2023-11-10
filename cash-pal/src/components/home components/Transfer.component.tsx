@@ -24,12 +24,6 @@ const Transfer = ({transfer_id, transfer_status, sender_username, receiver_usern
 
   const { account_id } = useSelector(accountSelector, shallowEqual);
 
-  // const account_id = useSelector(selectAccountId, shallowEqual);
-
-  // const { account_id } = useSelector((state: RootState) => ({
-  //   account_id: state.account.account_id,
-  // }));
-
   const handleClick = async (isAccepted: boolean) => {
     try {
       const response = await processPendingTransfer(transfer_id, isAccepted);

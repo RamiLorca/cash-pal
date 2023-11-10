@@ -42,7 +42,6 @@ public class TransferController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     @MessageMapping("/initiate-transfer")
-    @SendTo("/topic/transfer-updates")
     public void initiateTransfer(@RequestBody Transfer transfer) {
 
         String initiatorUsername = transfer.getInitiatorUsername();
@@ -54,7 +53,7 @@ public class TransferController {
 
         System.out.println(transfer);
 
-        try{
+        try {
             boolean result = transferDao.initiateTransfer(initiatorUsername, senderId, senderUsername, receiverId, receiverUsername, amount);
 
             if (result && initiatorUsername.equals(senderUsername)){
@@ -64,14 +63,68 @@ public class TransferController {
                 accountDao.updateAccountBalance(senderId, newSenderBalance);
                 accountDao.updateAccountBalance(receiverId, newReceiverBalance);
 
+                try {
+
+                    WebSocketMessage senderMessage = new WebSocketMessage(newSenderBalance.toString());
+                    String jsonMessage = objectMapper.writeValueAsString(senderMessage);
+                    messagingTemplate.convertAndSend("/topic/transfer-updates/" + senderId, jsonMessage);
+                    System.out.println(senderMessage);
+
+                    WebSocketMessage receiverMessage = new WebSocketMessage(newReceiverBalance.toString());
+                    jsonMessage = objectMapper.writeValueAsString(receiverMessage);
+                    messagingTemplate.convertAndSend("/topic/transfer-updates/" + receiverId, jsonMessage);
+                    System.out.println(receiverMessage);
+
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+
+            } else if (result) {
+
+                try {
+
+                    WebSocketMessage senderMessage = new WebSocketMessage("New Transfer");
+                    String jsonMessage = objectMapper.writeValueAsString(senderMessage);
+                    messagingTemplate.convertAndSend("/topic/transfer-updates/" + senderId, jsonMessage);
+                    System.out.println(senderMessage);
+
+                    WebSocketMessage receiverMessage = new WebSocketMessage("New Transfer");
+                    jsonMessage = objectMapper.writeValueAsString(receiverMessage);
+                    messagingTemplate.convertAndSend("/topic/transfer-updates/" + receiverId, jsonMessage);
+                    System.out.println(receiverMessage);
+
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             if(!result) {
+
+                try {
+                    WebSocketMessage message = new WebSocketMessage("Attempted transfer failed.");
+                    String jsonMessage = objectMapper.writeValueAsString(message);
+                    messagingTemplate.convertAndSend("/topic/transfer-updates/" + senderId, jsonMessage);
+                    messagingTemplate.convertAndSend("/topic/transfer-updates/" + receiverId, jsonMessage);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();;
+                }
+
                 System.out.println(transfer);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer initialization failed.");
             }
         }
         catch (DataAccessException e) {
+
+            try {
+                WebSocketMessage message = new WebSocketMessage("Attempted transfer failed.");
+                String jsonMessage = objectMapper.writeValueAsString(message);
+                messagingTemplate.convertAndSend("/topic/transfer-updates/" + senderId, jsonMessage);
+                messagingTemplate.convertAndSend("/topic/transfer-updates/" + receiverId, jsonMessage);
+            } catch (JsonProcessingException jsonException) {
+                jsonException.printStackTrace();;
+            }
+
             System.out.println(e.getMessage());
         }
     }
@@ -114,7 +167,6 @@ public class TransferController {
     //used to have OK response annotation here
     @RequestMapping(path = "/transfer", method = RequestMethod.PUT)
     @MessageMapping("/accept-or-reject-transfer")
-//    @SendTo("/topic/transfer-updates")
     public void acceptOrRejectTransfer (@RequestBody AcceptOrRejectTransferDTO transferDTO, Principal principal) {
         Transfer transfer = transferDao.getTransferDetailsById(transferDTO.getTransferId());
 

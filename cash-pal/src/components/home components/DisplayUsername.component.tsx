@@ -13,10 +13,6 @@ const accountSelector = createSelector(
 const DisplayUsername = () => {
 
   const { account } = useSelector(accountSelector);
-  
-  // const { account } = useSelector ((state: RootState) => ({
-  //   account: state.account
-  // }));
 
   return (
     <div>

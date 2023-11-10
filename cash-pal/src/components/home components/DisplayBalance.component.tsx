@@ -1,7 +1,6 @@
 import type { RootState } from "../../store";
 import { useSelector } from "react-redux";
 import { createSelector } from 'reselect';
-import account from "../../features/account";
 
 const selectAccount = (state: RootState) => state.account;
 const accountSelector = createSelector(
@@ -14,10 +13,6 @@ const accountSelector = createSelector(
 const DisplayBalance = () => {
 
   const { account } = useSelector(accountSelector);
-  
-  // const { account } = useSelector ((state: RootState) => ({
-  //   account: state.account
-  // }))
 
   return (
     <div>

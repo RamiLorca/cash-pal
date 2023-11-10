@@ -4,7 +4,7 @@ import { createSelector } from 'reselect';
 import type { RootState } from "../store";
 import { useSelector } from "react-redux";
 import { store } from "../store";
-import account, { setAccountBalance } from '../features/account';
+import { setAccountBalance } from '../features/account';
 import { fetchTransfers } from './TransferUtils';
 
 const selectAccountId = (state: RootState) => state.account.account_id;
@@ -30,27 +30,32 @@ const TransferWebSocketConfig = () => {
 
     client.onConnect = () => {
         console.log('Connected to WebSocket');
-        client.subscribe(`/topic/transfer-updates/${account_id}`, (message) => {
 
+        client.subscribe(`/topic/transfer-updates/${account_id}`, (message) => {
             if (message.body) {
                 try {
                     const jsonBody = JSON.parse(message.body);
-                    const newBalance = parseFloat(jsonBody.message);
-                    store.dispatch(setAccountBalance(newBalance));
-                    fetchTransfers(account_id);
+
+                    if (jsonBody.message === "New Transfer") {
+                        fetchTransfers(account_id);
+                    } else {
+                        const newBalance = parseFloat(jsonBody.message);
+                        store.dispatch(setAccountBalance(newBalance));
+                        fetchTransfers(account_id);
+                    }
 
                     console.log('Received message:', message.body);
+
                 } catch (error) {
                     console.error("Error parsing message body:", error);
                 }
-            }
-            
+            }  
         });
+        
     };
 
     client.onDisconnect = () => {
         console.log('Disconnected from WebSocket');
-        // Add actions to perform when disconnected
     };
 
     client.onStompError = (frame) => {
@@ -64,11 +69,10 @@ const TransferWebSocketConfig = () => {
         client.deactivate();
     }
 
-}, []);
+}, [account_id]);
 
     return (
         <div>
-          <h1> Websocket Component </h1>
         </div>
       )
 };

@@ -22,19 +22,6 @@ const TransactionForm = () => {
 
   const { account_id, account_username } = useSelector(accountSelector);
 
-  // const { account_id, account_username } = useSelector((state: RootState) => ({
-  //   account_id: state.account.account_id,
-  //   account_username: state.account.username,
-  // }));
-
-  // const { account_id } = useSelector((state: RootState) => ({
-  //   account_id: state.account.account_id,
-  // }));
-
-  // const { account_username } = useSelector((state: RootState) => ({
-  //   account_username: state.account.username,
-  // }));
-
   const [activeButton, setActiveButton] = useState("Send Money");
   const [currentAmount, setCurrentAmount] = useState(0);
   const [otherUsername, setOtherUsername] = useState("");
