@@ -1,6 +1,9 @@
 import { Client } from '@stomp/stompjs';
+import { useEffect } from "react";
 
 const TransferWebSocketConfig = () => {
+
+    useEffect(() => {
 
     const client = new Client({
         brokerURL: 'ws://localhost:8080/transfers-websocket',
@@ -12,17 +15,17 @@ const TransferWebSocketConfig = () => {
     client.onConnect = () => {
         console.log('Connected to WebSocket');
         client.subscribe('/topic/transfer-updates', (message) => {
-            if(message.body) {
-                console.log('Received raw message:', message.body);
-                try {
-                    var jsonBody = JSON.parse(message.body);
-                    if (jsonBody.message) {
-                        console.log("Received message: " + jsonBody.message);
-                    }
-                } catch (e) {
-                    console.error('Error parsing message body:', e);
-                }
-            }
+            // if(message.body) {
+            //     console.log('Received raw message:', message.body);
+            //     try {
+            //         var jsonBody = JSON.parse(message.body);
+            //         if (jsonBody.message) {
+            //             console.log("Received message: " + jsonBody.message);
+            //         }
+            //     } catch (e) {
+            //         console.error('Error parsing message body:', e);
+            //     }
+            // }
             console.log('Received message:', message.body);
         });
     };
@@ -38,6 +41,12 @@ const TransferWebSocketConfig = () => {
     };
 
     client.activate();
+
+    return () => {
+        client.deactivate();
+    }
+
+}, []);
 
     return (
         <div>
