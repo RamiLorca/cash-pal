@@ -6,6 +6,15 @@ import { logout } from "../features/account";
 import { clearTransferHistory } from "../features/transfer";
 import { useIdleTimer, PresenceType } from "react-idle-timer";
 import { useEffect, useState } from "react";
+import { createSelector } from 'reselect';
+
+const selectIsLoggedIn = (state: RootState) => state.account.activated;
+const isLoggedInSelector = createSelector(
+  selectIsLoggedIn,
+  (isLoggedIn) => ({
+    isLoggedIn,
+  })
+);
 
 const NavigationBar = () => {
 
@@ -56,9 +65,11 @@ const NavigationBar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { isLoggedIn } = useSelector((state: RootState) => ({
-    isLoggedIn: state.account.activated,
-  }));
+  // const { isLoggedIn } = useSelector((state: RootState) => ({
+  //   isLoggedIn: state.account.activated,
+  // }));
+
+  const { isLoggedIn } = useSelector(isLoggedInSelector);
 
   const handleSignOut = () => {
     dispatch(logout());
@@ -75,9 +86,9 @@ const NavigationBar = () => {
     <>
 
       {/* block below allows view of idle timer */}
-      {/* <p>Current State: {state}</p>
+      <p>Current State: {state}</p>
       <p>Action Events: {count}</p>
-      <p>{remaining} seconds remaining</p> */}
+      <p>{remaining} seconds remaining</p>
 
       {!hideNavigation && (
       

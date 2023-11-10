@@ -4,16 +4,36 @@ import { RootState } from "../../store";
 import { fetchOtherUserId } from "../../utilities/UserUtils";
 import { useSelector } from "react-redux";
 import CurrencyInput from "react-currency-input-field";
+import { createSelector } from 'reselect';
+
+const selectAccountId = (state: RootState) => state.account.account_id;
+const selectAccountUsername = (state: RootState) => state.account.username;
+
+const accountSelector = createSelector(
+  selectAccountId,
+  selectAccountUsername,
+  (account_id, account_username) => ({
+    account_id,
+    account_username,
+  })
+);
 
 const TransactionForm = () => {
 
-  const { account_id } = useSelector((state: RootState) => ({
-    account_id: state.account.account_id,
-  }));
+  const { account_id, account_username } = useSelector(accountSelector);
 
-  const { account_username } = useSelector((state: RootState) => ({
-    account_username: state.account.username,
-  }));
+  // const { account_id, account_username } = useSelector((state: RootState) => ({
+  //   account_id: state.account.account_id,
+  //   account_username: state.account.username,
+  // }));
+
+  // const { account_id } = useSelector((state: RootState) => ({
+  //   account_id: state.account.account_id,
+  // }));
+
+  // const { account_username } = useSelector((state: RootState) => ({
+  //   account_username: state.account.username,
+  // }));
 
   const [activeButton, setActiveButton] = useState("Send Money");
   const [currentAmount, setCurrentAmount] = useState(0);

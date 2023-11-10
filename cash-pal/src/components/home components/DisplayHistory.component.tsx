@@ -1,10 +1,19 @@
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Transfer from "./Transfer.component";
+import { createSelector } from 'reselect';
+import transfer from "../../features/transfer";
+
+const selectTransfers = (state: RootState) => state.transfer.transfers;
+const memoizedSelectTransfers = createSelector(
+  selectTransfers,
+  (transfers) => transfers
+);
 
 const DisplayHistory = () => {
 
-  const transfers = useSelector((state: RootState) => state.transfer.transfers);
+  // const transfers = useSelector((state: RootState) => state.transfer.transfers);
+  const transfers = useSelector(memoizedSelectTransfers, shallowEqual);
   const sortedTransfers = [...transfers].sort((a, b) => b.transfer_id - a.transfer_id);
 
   const formatToCurrencyString = (number: number): string => {
