@@ -15,21 +15,26 @@ const accountIdSelector = createSelector(
   })
 );
 
+const client = new Client({
+    brokerURL: 'ws://localhost:8080/transfers-websocket',
+    reconnectDelay: 5000,
+    heartbeatIncoming: 4000,
+    heartbeatOutgoing: 4000,
+});
+
+export const publishUsernameInput = (usernameInput: string) => {
+    client.publish({destination: '/accounts-autocomplete', body: `${usernameInput}`});
+    console.log(usernameInput);
+};
+
 const TransferWebSocketConfig = () => {
 
     const { account_id } = useSelector(accountIdSelector);
 
     useEffect(() => {
 
-    const client = new Client({
-        brokerURL: 'ws://localhost:8080/transfers-websocket',
-        reconnectDelay: 5000,
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
-    });
-
     client.onConnect = () => {
-        console.log('Connected to WebSocket');
+        console.log('Connected to Transfer WebSocket');
 
         client.subscribe(`/topic/transfer-updates/${account_id}`, (message) => {
             if (message.body) {
@@ -71,10 +76,8 @@ const TransferWebSocketConfig = () => {
 
 }, [account_id]);
 
-    return (
-        <div>
-        </div>
-      )
+    return null
+    
 };
 
 export default TransferWebSocketConfig;
