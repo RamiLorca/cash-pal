@@ -1,7 +1,23 @@
 import { Client } from '@stomp/stompjs';
 import { useEffect } from "react";
+import { createSelector } from 'reselect';
+import type { RootState } from "../store";
+import { useSelector } from "react-redux";
+import { store } from "../store";
+import account, { setAccountBalance } from '../features/account';
+import { fetchTransfers } from './TransferUtils';
+
+const selectAccountId = (state: RootState) => state.account.account_id;
+const accountIdSelector = createSelector(
+  selectAccountId,
+  (account_id) => ({
+    account_id,
+  })
+);
 
 const TransferWebSocketConfig = () => {
+
+    const { account_id } = useSelector(accountIdSelector);
 
     useEffect(() => {
 
@@ -14,19 +30,21 @@ const TransferWebSocketConfig = () => {
 
     client.onConnect = () => {
         console.log('Connected to WebSocket');
-        client.subscribe('/topic/transfer-updates', (message) => {
-            // if(message.body) {
-            //     console.log('Received raw message:', message.body);
-            //     try {
-            //         var jsonBody = JSON.parse(message.body);
-            //         if (jsonBody.message) {
-            //             console.log("Received message: " + jsonBody.message);
-            //         }
-            //     } catch (e) {
-            //         console.error('Error parsing message body:', e);
-            //     }
-            // }
-            console.log('Received message:', message.body);
+        client.subscribe(`/topic/transfer-updates/${account_id}`, (message) => {
+
+            if (message.body) {
+                try {
+                    const jsonBody = JSON.parse(message.body);
+                    const newBalance = parseFloat(jsonBody.message);
+                    store.dispatch(setAccountBalance(newBalance));
+                    fetchTransfers(account_id);
+
+                    console.log('Received message:', message.body);
+                } catch (error) {
+                    console.error("Error parsing message body:", error);
+                }
+            }
+            
         });
     };
 

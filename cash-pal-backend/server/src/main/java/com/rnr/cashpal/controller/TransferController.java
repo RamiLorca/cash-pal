@@ -114,13 +114,17 @@ public class TransferController {
     //used to have OK response annotation here
     @RequestMapping(path = "/transfer", method = RequestMethod.PUT)
     @MessageMapping("/accept-or-reject-transfer")
-    @SendTo("/topic/transfer-updates")
+//    @SendTo("/topic/transfer-updates")
     public void acceptOrRejectTransfer (@RequestBody AcceptOrRejectTransferDTO transferDTO, Principal principal) {
         Transfer transfer = transferDao.getTransferDetailsById(transferDTO.getTransferId());
 
+        int senderId = transfer.getSenderId();
+        int receiverId = transfer.getReceiverId();
+
         if (transferDTO.isAccepted()) {
-            BigDecimal newSenderBalance = accountDao.subtractFromBalance(transfer.getSenderId(), transfer.getAmount());
-            BigDecimal newReceiverBalance = accountDao.addToBalance(transfer.getReceiverId(), transfer.getAmount());
+
+            BigDecimal newSenderBalance = accountDao.subtractFromBalance(senderId, transfer.getAmount());
+            BigDecimal newReceiverBalance = accountDao.addToBalance(receiverId, transfer.getAmount());
 
             accountDao.updateAccountBalance(transfer.getSenderId(), newSenderBalance);
             accountDao.updateAccountBalance(transfer.getReceiverId(), newReceiverBalance);
@@ -128,15 +132,15 @@ public class TransferController {
             transferDao.acceptTransfer(transfer.getTransferId());
 
             try {
-                WebSocketMessage message = new WebSocketMessage("New sender balance: " + newSenderBalance);
-                String jsonMessage = objectMapper.writeValueAsString(message);
-                messagingTemplate.convertAndSend("/topic/transfer-updates", jsonMessage);
-                System.out.println("New sender balance: " + newSenderBalance);
+                WebSocketMessage senderMessage = new WebSocketMessage(newSenderBalance.toString());
+                String jsonMessage = objectMapper.writeValueAsString(senderMessage);
+                messagingTemplate.convertAndSend("/topic/transfer-updates/" + senderId, jsonMessage);
+                System.out.println(senderMessage);
 
-                message = new WebSocketMessage("New receiver balance: " + newReceiverBalance);
-                jsonMessage = objectMapper.writeValueAsString(message);
-                messagingTemplate.convertAndSend("/topic/transfer-updates", jsonMessage);
-                System.out.println("New receiver balance: " + newReceiverBalance);
+                WebSocketMessage receiverMessage = new WebSocketMessage(newReceiverBalance.toString());
+                jsonMessage = objectMapper.writeValueAsString(receiverMessage);
+                messagingTemplate.convertAndSend("/topic/transfer-updates/" + receiverId, jsonMessage);
+                System.out.println(receiverMessage);
 
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -144,11 +148,10 @@ public class TransferController {
         } else {
             transferDao.cancelTransfer(transfer.getTransferId(), principal);
             try {
-                WebSocketMessage message = new WebSocketMessage("Your transfer has been cancelled.");
+                WebSocketMessage message = new WebSocketMessage("Attempted transfer cancelled.");
                 String jsonMessage = objectMapper.writeValueAsString(message);
-                messagingTemplate.convertAndSend("/topic/transfer-updates", jsonMessage);
-
-                messagingTemplate.convertAndSend("/topic/transfer-updates", jsonMessage);
+                messagingTemplate.convertAndSend("/topic/transfer-updates/" + senderId, jsonMessage);
+                messagingTemplate.convertAndSend("/topic/transfer-updates/" + receiverId, jsonMessage);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();;
             }
