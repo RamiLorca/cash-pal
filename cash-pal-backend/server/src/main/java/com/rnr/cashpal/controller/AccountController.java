@@ -2,12 +2,14 @@ package com.rnr.cashpal.controller;
 
 import com.rnr.cashpal.dao.AccountDao;
 import com.rnr.cashpal.model.Account;
+import com.rnr.cashpal.model.AddToBalanceDTO;
 import com.rnr.cashpal.model.GetAllAccountsDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -45,4 +47,13 @@ public class AccountController {
         return accountDao.findByUsername(username);
     }
 
+    @RequestMapping(path = "/accounts/addfunds", method = RequestMethod.PUT)
+    public BigDecimal addFundsToAccount(@RequestBody AddToBalanceDTO dto) {
+        int accountId = dto.getAccountId();
+        BigDecimal amount = dto.getAmount();
+
+        accountDao.updateAccountBalance(accountId, amount);
+
+        return accountDao.addToBalance(accountId, amount);
+    }
 }

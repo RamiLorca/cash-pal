@@ -63,3 +63,15 @@ export const fetchOtherUserId = async (otherUsername: string) => {
     throw new Error("Failed to fetch other user's Id");
   }
 };
+
+export const addToBalance = async (accountId: number, amount: number) => {
+  try {
+    const response = await axios.put('http://localhost:8080/accounts/addfunds', {accountId: accountId, amount: amount});
+    console.log(response.data)
+    return response.data;
+  }
+  catch (error) {
+    console.log(error);
+    throw new Error("Failed to add funds to account");
+  }
+}
