@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { store } from "../store";
 import { setAccountBalance } from '../features/account';
 import { fetchTransfers } from './TransferUtils';
+import SockJS from 'sockjs-client';
 
 const selectAccountId = (state: RootState) => state.account.account_id;
 const accountIdSelector = createSelector(
@@ -15,17 +16,31 @@ const accountIdSelector = createSelector(
   })
 );
 
+// const client = new Client({
+//     brokerURL: 'ws://localhost:8080/transfers-websocket',
+//     reconnectDelay: 5000,
+//     heartbeatIncoming: 4000,
+//     heartbeatOutgoing: 4000,
+// });
+
 const client = new Client({
-    brokerURL: 'ws://localhost:8080/transfers-websocket',
+    webSocketFactory: () => new SockJS('http://localhost:8080/transfers-websocket'),
     reconnectDelay: 5000,
     heartbeatIncoming: 4000,
     heartbeatOutgoing: 4000,
 });
 
-export const publishUsernameInput = (usernameInput: string) => {
-    client.publish({destination: '/accounts-autocomplete', body: `${usernameInput}`});
-    console.log(usernameInput);
-};
+// export const publishUsernameInput = (usernameInput: string) => {
+//     const token = store.getState().account.token;
+//     client.publish({
+//         destination: '/app/accounts-autocomplete', 
+//         body: JSON.stringify({ usernameInput }),
+//         headers: {
+//             Authorization: `Bearer ${token}`
+//         }
+//     });
+//     console.log(usernameInput);
+// };
 
 const TransferWebSocketConfig = () => {
 
@@ -33,50 +48,67 @@ const TransferWebSocketConfig = () => {
 
     useEffect(() => {
 
-    client.onConnect = () => {
-        console.log('Connected to Transfer WebSocket');
+        client.onConnect = () => {
+            console.log('Connected to Transfer WebSocket');
 
-        client.subscribe(`/topic/transfer-updates/${account_id}`, (message) => {
-            if (message.body) {
-                try {
-                    const jsonBody = JSON.parse(message.body);
+            client.subscribe(`/topic/transfer-updates/${account_id}`, (message) => {
+                if (message.body) {
+                    try {
+                        const jsonBody = JSON.parse(message.body);
 
-                    if (jsonBody.message === "New Transfer") {
-                        fetchTransfers(account_id);
-                    } else {
-                        const newBalance = parseFloat(jsonBody.message);
-                        store.dispatch(setAccountBalance(newBalance));
-                        fetchTransfers(account_id);
+                        if (jsonBody.message === "New Transfer") {
+                            fetchTransfers(account_id);
+                        } else {
+                            const newBalance = parseFloat(jsonBody.message);
+                            store.dispatch(setAccountBalance(newBalance));
+                            fetchTransfers(account_id);
+                        }
+
+                        console.log('Received message:', message.body);
+
+                    } catch (error) {
+                        console.error("Error parsing message body:", error);
                     }
+                }  
+            });
 
-                    console.log('Received message:', message.body);
+            client.subscribe(`/topic/accounts-autocomplete/${account_id}`, (message) => {
 
-                } catch (error) {
-                    console.error("Error parsing message body:", error);
-                }
-            }  
-        });
+                if (message.body) {
+
+                    try {
+                        const jsonBody = JSON.parse(message.body);
         
-    };
+                        console.log("Autocomplete suggestions:" + jsonBody);
 
-    client.onDisconnect = () => {
-        console.log('Disconnected from WebSocket');
-    };
+                    } catch (error) {
+                        console.error("Error parsing message body:", error);
+                    }
+                }
+        
+            });
+            
+        };
+        
 
-    client.onStompError = (frame) => {
-        console.log('Broker reported error: ' + frame.headers['message']);
-        console.log('Additional details: ' + frame.body);
-    };
+        client.onDisconnect = () => {
+            console.log('Disconnected from WebSocket');
+        };
 
-    client.activate();
+        client.onStompError = (frame) => {
+            console.log('Broker reported error: ' + frame.headers['message']);
+            console.log('Additional details: ' + frame.body);
+        };
 
-    return () => {
-        client.deactivate();
-    }
+        client.activate();
 
-}, [account_id]);
+        return () => {
+            client.deactivate();
+        }
 
-    return null
+    }, [account_id]);
+
+    return null;
     
 };
 

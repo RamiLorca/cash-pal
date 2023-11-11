@@ -124,4 +124,30 @@ export const processPendingTransfer = async (transferId: number, isAccepted: boo
     console.error(error);
     throw new Error("Failed to process transfer");
   }
+  
+};
+
+export const fetchUsernameSuggestions = async (usernameInput: string) => {
+
+  try{
+    const accountId = store.getState().account.account_id;
+    const token = store.getState().account.token;
+    await axios.post(
+      `http://localhost:8080/accounts/autocomplete`,
+      {
+        username_input: usernameInput,
+        account_id: accountId
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to process fetch username suggestions");
+  }
+  
 };
