@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { transactionRequest, fetchTransfers } from "../../utilities/TransferUtils";
+import { transactionRequest, fetchTransfers, fetchUsernameSuggestions } from "../../utilities/TransferUtils";
 import { RootState } from "../../store";
 import { fetchOtherUserId } from "../../utilities/UserUtils";
 import { useSelector } from "react-redux";
 import CurrencyInput from "react-currency-input-field";
 import { createSelector } from 'reselect';
-import { publishUsernameInput } from "../../utilities/TransferWebSocketConfig";
+// import { publishUsernameInput } from "../../utilities/TransferWebSocketConfig";
 
 const selectAccountId = (state: RootState) => state.account.account_id;
 const selectAccountUsername = (state: RootState) => state.account.username;
@@ -29,7 +29,7 @@ const TransactionForm = () => {
   const [amountInputValue, setAmountInputValue] = useState("");
 
   const handleUsernameInput = (usernameInput: string) => {
-    publishUsernameInput(usernameInput);
+    fetchUsernameSuggestions(usernameInput);
   };
 
   const handleButtonClick = (buttonType: string) => {
