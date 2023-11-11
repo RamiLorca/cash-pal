@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import DisplayUsername from "../components/home components/DisplayUsername.component";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -6,6 +6,15 @@ import { logout } from "../features/account";
 import { clearTransferHistory } from "../features/transfer";
 import { useIdleTimer, PresenceType } from "react-idle-timer";
 import { useEffect, useState } from "react";
+import { createSelector } from 'reselect';
+
+const selectIsLoggedIn = (state: RootState) => state.account.activated;
+const isLoggedInSelector = createSelector(
+  selectIsLoggedIn,
+  (isLoggedIn) => ({
+    isLoggedIn,
+  })
+);
 
 const NavigationBar = () => {
 
@@ -23,6 +32,7 @@ const NavigationBar = () => {
     if (isIdle) {
       setState('Idle');
       handleSignOut();
+      //routing to sign in screen 
     } else if (isPrompted) {
       setState('Prompted')
     } else if (isActive) {
@@ -55,17 +65,18 @@ const NavigationBar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { isLoggedIn } = useSelector((state: RootState) => ({
-    isLoggedIn: state.account.activated,
-  }));
+  const { isLoggedIn } = useSelector(isLoggedInSelector);
 
   const handleSignOut = () => {
     dispatch(logout());
     dispatch(clearTransferHistory());
+    navigate(signInScreenPath);
   };
 
   const atSignInScreen = location.pathname === '/signin';
   const hideNavigation = !isLoggedIn && atSignInScreen;
+  const signInScreenPath = '/signin';
+  const navigate = useNavigate();
 
   return (
     <>

@@ -4,21 +4,33 @@ import { RootState } from "../../store";
 import { fetchOtherUserId } from "../../utilities/UserUtils";
 import { useSelector } from "react-redux";
 import CurrencyInput from "react-currency-input-field";
+import { createSelector } from 'reselect';
+import { publishUsernameInput } from "../../utilities/TransferWebSocketConfig";
+
+const selectAccountId = (state: RootState) => state.account.account_id;
+const selectAccountUsername = (state: RootState) => state.account.username;
+
+const accountSelector = createSelector(
+  selectAccountId,
+  selectAccountUsername,
+  (account_id, account_username) => ({
+    account_id,
+    account_username,
+  })
+);
 
 const TransactionForm = () => {
 
-  const { account_id } = useSelector((state: RootState) => ({
-    account_id: state.account.account_id,
-  }));
-
-  const { account_username } = useSelector((state: RootState) => ({
-    account_username: state.account.username,
-  }));
+  const { account_id, account_username } = useSelector(accountSelector);
 
   const [activeButton, setActiveButton] = useState("Send Money");
   const [currentAmount, setCurrentAmount] = useState(0);
   const [otherUsername, setOtherUsername] = useState("");
   const [amountInputValue, setAmountInputValue] = useState("");
+
+  const handleUsernameInput = (usernameInput: string) => {
+    publishUsernameInput(usernameInput);
+  };
 
   const handleButtonClick = (buttonType: string) => {
     setActiveButton(buttonType);
@@ -98,6 +110,7 @@ const TransactionForm = () => {
           value={otherUsername}
           onChange={(event) => {
             setOtherUsername(event.target.value);
+            handleUsernameInput(event.target.value);
           }} 
         />
 

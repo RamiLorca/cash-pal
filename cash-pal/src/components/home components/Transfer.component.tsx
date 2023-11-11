@@ -1,6 +1,7 @@
 import { processPendingTransfer, fetchTransfers } from "../../utilities/TransferUtils";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { createSelector } from 'reselect';
 
 type TransferProps = {
   transfer_id: number;
@@ -10,11 +11,18 @@ type TransferProps = {
   amount: string;
 };
 
+const selectAccountId = (state: RootState) => state.account.account_id;
+
+const accountSelector = createSelector(
+  selectAccountId,
+  (account_id) => ({
+    account_id,
+  })
+);
+
 const Transfer = ({transfer_id, transfer_status, sender_username, receiver_username, amount}: TransferProps) => {
 
-  const { account_id } = useSelector((state: RootState) => ({
-    account_id: state.account.account_id,
-  }));
+  const { account_id } = useSelector(accountSelector, shallowEqual);
 
   const handleClick = async (isAccepted: boolean) => {
     try {
