@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createSelector } from 'reselect';
 import type { RootState } from "../store";
 import { useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import { store } from "../store";
 import { setAccountBalance } from '../features/account';
 import { fetchTransfers } from './TransferUtils';
 import SockJS from 'sockjs-client';
+import { SuggestionsContextType } from '../context/SuggestionsContext';
 
 const selectAccountId = (state: RootState) => state.account.account_id;
 const accountIdSelector = createSelector(
@@ -15,13 +16,6 @@ const accountIdSelector = createSelector(
     account_id,
   })
 );
-
-// const client = new Client({
-//     brokerURL: 'ws://localhost:8080/transfers-websocket',
-//     reconnectDelay: 5000,
-//     heartbeatIncoming: 4000,
-//     heartbeatOutgoing: 4000,
-// });
 
 const client = new Client({
     webSocketFactory: () => new SockJS('http://localhost:8080/transfers-websocket'),
@@ -45,6 +39,7 @@ const client = new Client({
 const TransferWebSocketConfig = () => {
 
     const { account_id } = useSelector(accountIdSelector);
+    const [usernameSuggestions, setUsernameSuggestions] = useState<SuggestionsContextType>([]);
 
     useEffect(() => {
 
@@ -77,10 +72,9 @@ const TransferWebSocketConfig = () => {
                 if (message.body) {
 
                     try {
-                        const jsonBody = JSON.parse(message.body);
-        
-                        console.log("Autocomplete suggestions:" + jsonBody);
-
+                        const suggestions = JSON.parse(message.body) as SuggestionsContextType;
+                        setUsernameSuggestions(suggestions);
+                        console.log(usernameSuggestions);
                     } catch (error) {
                         console.error("Error parsing message body:", error);
                     }
@@ -106,7 +100,7 @@ const TransferWebSocketConfig = () => {
             client.deactivate();
         }
 
-    }, [account_id]);
+    }, [account_id, usernameSuggestions]);
 
     return null;
     

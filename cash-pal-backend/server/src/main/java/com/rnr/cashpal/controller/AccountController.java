@@ -51,22 +51,6 @@ public class AccountController {
         return accountDao.getAllAccounts();
     }
 
-//    @MessageMapping("/accounts-autocomplete")
-//    @SendTo("/topic/accounts-autocomplete")
-//    public void getAutoCompleteSuggestions(@Payload UsernameSearchDTO usernameSearchDTO) {
-//        try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//
-//            List<String> suggestions = accountDao.getAutoCompleteSuggestions(usernameSearchDTO.getUsernameInput());
-//
-//            String suggestionJson = objectMapper.writeValueAsString(suggestions);
-//            messagingTemplate.convertAndSend("/topic/accounts-autocomplete", suggestionJson);
-//            System.out.println("Autocomplete suggestions: " + suggestionJson);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     @MessageMapping("/accounts-autocomplete")
     @RequestMapping(path = "/accounts/autocomplete", method = RequestMethod.POST)
     public void getAutoCompleteSuggestions(@RequestBody UsernameSearchDTO usernameSearchDTO) {
@@ -74,18 +58,11 @@ public class AccountController {
         try {
             int accountId = usernameSearchDTO.getAccountId();
 
-            System.out.println("account id: " + accountId);
-            System.out.println("search input: " + usernameSearchDTO.getUsernameInput());
-
             List<String> suggestions = accountDao.getAutoCompleteSuggestions(usernameSearchDTO.getUsernameInput());
 
             ObjectMapper objectMapper = new ObjectMapper();
-
             String suggestionJson = objectMapper.writeValueAsString(suggestions);
-
-            String testMessage = "Test message - username suggestions";
-            messagingTemplate.convertAndSend("/topic/accounts-autocomplete" + accountId, testMessage);
-            System.out.println("Autocomplete suggestions: " + suggestionJson);
+            messagingTemplate.convertAndSend("/topic/accounts-autocomplete/" + accountId, suggestionJson);
 
         } catch (DataAccessException | JsonProcessingException e) {
             System.out.println(e.getMessage());
