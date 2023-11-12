@@ -4,6 +4,7 @@ import Navigation from './router/NavigationBar.component';
 import Home from './router/Home.component';
 import Settings from './router/Settings.component';
 import SignIn from './router/SignIn.component';
+import { SuggestionsProvider } from './context/SuggestionsContext';
 
 import TransferWebSocketConfig from './utilities/TransferWebSocketConfig';
 
@@ -11,17 +12,16 @@ const App = () => {
 
   return (
     <>
-
-    <TransferWebSocketConfig />
-
-    <Routes>
-      <Route path='/' element={<Navigation />}>
-        <Route index element={<Home />} />
-        <Route path='settings' element={<Settings />} />
-        <Route path='signin' element={<SignIn />} />
-      </Route>
-    </Routes>
-
+    <SuggestionsProvider>
+      <TransferWebSocketConfig />
+        <Routes>
+          <Route path='/' element={<Navigation />}>
+            <Route index element={<Home />} />
+            <Route path='settings' element={<Settings />} />
+            <Route path='signin' element={<SignIn />} />
+          </Route>
+        </Routes>
+    </SuggestionsProvider>
     </>
   );
 }

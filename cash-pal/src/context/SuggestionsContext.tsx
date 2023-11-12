@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { ReactNode, createContext, useContext, useState } from 'react';
 
-export type SuggestionsContextType = string[];
+interface SuggestionsContextType {
+    suggestions: string[];
+    setNewSuggestions: (newSuggestions: string[]) => void;
+}
 
-const SuggestionsContext = React.createContext<SuggestionsContextType>([]);
+const SuggestionsContext = createContext<SuggestionsContextType | undefined>(undefined);
 
-export default SuggestionsContext;
+export const SuggestionsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+
+    const setNewSuggestions = (newSuggestions: string[]) => {
+        setSuggestions(newSuggestions);
+    };
+
+    const contextValue: SuggestionsContextType = {
+        suggestions,
+        setNewSuggestions,
+    };
+
+    return <SuggestionsContext.Provider value={contextValue}>{children}</SuggestionsContext.Provider>;
+};
+
+export const useSuggestions = (): SuggestionsContextType => {
+    const context = useContext(SuggestionsContext);
+    if(!context) {
+        throw new Error('useSuggestions must be used within a SuggestionsProvider');
+    }
+    return context;
+};

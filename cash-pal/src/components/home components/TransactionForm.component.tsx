@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { transactionRequest, fetchTransfers, fetchUsernameSuggestions } from "../../utilities/TransferUtils";
 import { RootState } from "../../store";
 import { fetchOtherUserId } from "../../utilities/UserUtils";
 import { useSelector } from "react-redux";
 import CurrencyInput from "react-currency-input-field";
 import { createSelector } from 'reselect';
-import SuggestionsContext from "../../context/SuggestionsContext";
+import { useSuggestions } from "../../context/SuggestionsContext";
 
 const selectAccountId = (state: RootState) => state.account.account_id;
 const selectAccountUsername = (state: RootState) => state.account.username;
@@ -21,8 +21,9 @@ const accountSelector = createSelector(
 
 const TransactionForm = () => {
 
+  const { suggestions } = useSuggestions();
+
   const { account_id, account_username } = useSelector(accountSelector);
-  const usernameSuggestions = useContext(SuggestionsContext);
 
   const [activeButton, setActiveButton] = useState("Send Money");
   const [currentAmount, setCurrentAmount] = useState(0);
@@ -91,6 +92,10 @@ const TransactionForm = () => {
     }
   };
 
+  const handleUsernameClick = (suggestion: string) => {
+    setOtherUsername(suggestion);
+  };
+
   return (
     <div>
       <h1>Transaction Form</h1>
@@ -117,23 +122,6 @@ const TransactionForm = () => {
 
         <br />
 
-        {usernameSuggestions.length > 0 && (
-          <select
-            id="username-suggestions"
-            value={otherUsername}
-            onChange={(event) => setOtherUsername(event.target.value)}
-          >
-            <option value="">Select a username</option>
-            {usernameSuggestions.map((username) => (
-              <option key={username} value={username}>
-                {username}
-              </option>
-            ))}
-          </select>
-        )}
-
-        <br />
-
         <CurrencyInput
           id="amount-input"
           name="amount"
@@ -152,6 +140,21 @@ const TransactionForm = () => {
 
         <input type="submit" value={activeButton} />
       </form>
+
+      <br />
+
+      <div>
+        {suggestions.length > 0 && (
+          <ul>
+            {suggestions.map((suggestion) => (
+              <li key={suggestion} onClick={() => handleUsernameClick(suggestion)}>
+                {suggestion}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
     </div>
   )
 }

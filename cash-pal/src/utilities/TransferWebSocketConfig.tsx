@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createSelector } from 'reselect';
 import type { RootState } from "../store";
 import { useSelector } from "react-redux";
@@ -7,9 +7,10 @@ import { store } from "../store";
 import { setAccountBalance } from '../features/account';
 import { fetchTransfers } from './TransferUtils';
 import SockJS from 'sockjs-client';
-import { SuggestionsContextType } from '../context/SuggestionsContext';
+import { useSuggestions } from '../context/SuggestionsContext';
 
 const selectAccountId = (state: RootState) => state.account.account_id;
+
 const accountIdSelector = createSelector(
   selectAccountId,
   (account_id) => ({
@@ -38,8 +39,9 @@ const client = new Client({
 
 const TransferWebSocketConfig = () => {
 
+    const { setNewSuggestions } = useSuggestions();
+
     const { account_id } = useSelector(accountIdSelector);
-    const [usernameSuggestions, setUsernameSuggestions] = useState<SuggestionsContextType>([]);
 
     useEffect(() => {
 
@@ -68,23 +70,18 @@ const TransferWebSocketConfig = () => {
             });
 
             client.subscribe(`/topic/accounts-autocomplete/${account_id}`, (message) => {
-
                 if (message.body) {
-
                     try {
-                        const suggestions = JSON.parse(message.body) as SuggestionsContextType;
-                        setUsernameSuggestions(suggestions);
-                        console.log(usernameSuggestions);
+                        const suggestions = JSON.parse(message.body) as string[];
+                        setNewSuggestions(suggestions);
+                        console.log("Websocket suggestions: ", suggestions);
                     } catch (error) {
                         console.error("Error parsing message body:", error);
                     }
                 }
-        
             });
-            
         };
         
-
         client.onDisconnect = () => {
             console.log('Disconnected from WebSocket');
         };
@@ -100,7 +97,7 @@ const TransferWebSocketConfig = () => {
             client.deactivate();
         }
 
-    }, [account_id, usernameSuggestions]);
+    }, [account_id, setNewSuggestions]);
 
     return null;
     
