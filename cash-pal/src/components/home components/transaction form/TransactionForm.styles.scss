@@ -22,12 +22,18 @@
             cursor: pointer;
             text-align: start;
             margin: 2px 0;
+
+            &.highlighted {
+                background-color: rgb(100, 100, 255);
+                color: white;
+              }
+
         }
 
     }
 
     .dropdown:empty {
-        border: none;
+        display: none;
     }
 
 }

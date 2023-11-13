@@ -1,16 +1,16 @@
 import './TransactionForm.styles.scss';
-import React, { useState } from "react";
-import {
-  transactionRequest,
-  fetchTransfers,
-  fetchUsernameSuggestions,
-} from "../../../utilities/TransferUtils";
+import React, { useEffect, useState } from "react";
 import { RootState } from "../../../store";
 import { fetchOtherUserId } from "../../../utilities/UserUtils";
 import { useSelector } from "react-redux";
 import CurrencyInput from "react-currency-input-field";
 import { createSelector } from "reselect";
 import { useSuggestions } from "../../../context/SuggestionsContext";
+import {
+  transactionRequest,
+  fetchTransfers,
+  fetchUsernameSuggestions,
+} from "../../../utilities/TransferUtils";
 
 const selectAccountId = (state: RootState) => state.account.account_id;
 const selectAccountUsername = (state: RootState) => state.account.username;
@@ -25,17 +25,32 @@ const accountSelector = createSelector(
 );
 
 const TransactionForm = () => {
+
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
   const { suggestions } = useSuggestions();
-
   const { account_id, account_username } = useSelector(accountSelector);
-
   const [activeButton, setActiveButton] = useState("Send Money");
   const [currentAmount, setCurrentAmount] = useState(0);
   const [otherUsername, setOtherUsername] = useState("");
   const [amountInputValue, setAmountInputValue] = useState("");
 
+  useEffect(() => {
+    const filtered = suggestions.filter(suggestion => {
+      const searchTerm = otherUsername.toLowerCase();
+      const fullUsername = suggestion.toLowerCase();
+      return searchTerm && fullUsername.startsWith(searchTerm) && fullUsername !== searchTerm;
+    });
+
+    setFilteredSuggestions(filtered);
+  }, [suggestions, otherUsername]);
+
+  const fetchAndSetFilteredSuggestions = async (usernameInput: string) => {
+    await fetchUsernameSuggestions(usernameInput);
+  };
+
   const handleUsernameInput = (usernameInput: string) => {
-    fetchUsernameSuggestions(usernameInput);
+    fetchAndSetFilteredSuggestions(usernameInput);
   };
 
   const handleButtonClick = (buttonType: string) => {
@@ -96,6 +111,24 @@ const TransactionForm = () => {
 
   const handleUsernameClick = (suggestion: string) => {
     setOtherUsername(suggestion);
+    setHighlightedIndex(null);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setHighlightedIndex((prevIndex) => 
+        prevIndex === null || prevIndex === filteredSuggestions.length - 1 ? 0 : prevIndex + 1
+      );
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setHighlightedIndex((prevIndex) => 
+        prevIndex === null || prevIndex === 0 ? filteredSuggestions.length - 1 : prevIndex - 1
+      );
+    } else if (event.key === 'Enter' && highlightedIndex !== null) {
+      event.preventDefault();
+      handleUsernameClick(filteredSuggestions[highlightedIndex]);
+    }
   };
 
   return (
@@ -123,20 +156,19 @@ const TransactionForm = () => {
                 setOtherUsername(event.target.value);
                 handleUsernameInput(event.target.value);
               }}
+              onKeyDown={handleKeyDown}
+              autoComplete="off"
             />
           </div>
 
-          <div className="dropdown">
-            {suggestions.filter(suggestion => {
-              const searchTerm = otherUsername.toLowerCase();
-              const fullUsername = suggestion.toLowerCase();
-
-              return searchTerm && fullUsername.startsWith(searchTerm) && fullUsername !== searchTerm;
-            })
+          <div 
+            className="dropdown"
+          >
+            {filteredSuggestions
             .slice(0, 10)
-            .map((suggestion) => (
+            .map((suggestion, index) => (
               <div 
-                className="dropdown-row"
+                className={`dropdown-row ${highlightedIndex === index ? 'highlighted' : ''}`}
                 key={suggestion}
                 onClick={() => handleUsernameClick(suggestion)}
               >
