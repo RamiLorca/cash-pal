@@ -25,18 +25,6 @@ const client = new Client({
     heartbeatOutgoing: 4000,
 });
 
-// export const publishUsernameInput = (usernameInput: string) => {
-//     const token = store.getState().account.token;
-//     client.publish({
-//         destination: '/app/accounts-autocomplete', 
-//         body: JSON.stringify({ usernameInput }),
-//         headers: {
-//             Authorization: `Bearer ${token}`
-//         }
-//     });
-//     console.log(usernameInput);
-// };
-
 const TransferWebSocketConfig = () => {
 
     const { setNewSuggestions } = useSuggestions();
@@ -46,7 +34,7 @@ const TransferWebSocketConfig = () => {
     useEffect(() => {
 
         client.onConnect = () => {
-            console.log('Connected to Transfer WebSocket');
+            // console.log('Connected to Transfer WebSocket');
 
             client.subscribe(`/topic/transfer-updates/${account_id}`, (message) => {
                 if (message.body) {
@@ -61,7 +49,7 @@ const TransferWebSocketConfig = () => {
                             fetchTransfers(account_id);
                         }
 
-                        console.log('Received message:', message.body);
+                        // console.log('Received message:', message.body);
 
                     } catch (error) {
                         console.error("Error parsing message body:", error);
@@ -74,7 +62,7 @@ const TransferWebSocketConfig = () => {
                     try {
                         const suggestions = JSON.parse(message.body) as string[];
                         setNewSuggestions(suggestions);
-                        console.log("Websocket suggestions: ", suggestions);
+                        // console.log("Websocket suggestions: ", suggestions);
                     } catch (error) {
                         console.error("Error parsing message body:", error);
                     }
@@ -83,7 +71,7 @@ const TransferWebSocketConfig = () => {
         };
         
         client.onDisconnect = () => {
-            console.log('Disconnected from WebSocket');
+            // console.log('Disconnected from WebSocket');
         };
 
         client.onStompError = (frame) => {

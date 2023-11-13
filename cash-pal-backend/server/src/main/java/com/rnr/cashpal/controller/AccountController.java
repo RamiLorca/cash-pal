@@ -64,6 +64,8 @@ public class AccountController {
             String suggestionJson = objectMapper.writeValueAsString(suggestions);
             messagingTemplate.convertAndSend("/topic/accounts-autocomplete/" + accountId, suggestionJson);
 
+            System.out.println(suggestionJson);
+
         } catch (DataAccessException | JsonProcessingException e) {
             System.out.println(e.getMessage());
         }

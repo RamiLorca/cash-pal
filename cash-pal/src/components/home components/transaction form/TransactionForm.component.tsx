@@ -50,7 +50,11 @@ const TransactionForm = () => {
   };
 
   const handleUsernameInput = (usernameInput: string) => {
-    fetchAndSetFilteredSuggestions(usernameInput);
+    if (!usernameInput) {
+      setFilteredSuggestions([]);
+    } else {
+      fetchAndSetFilteredSuggestions(usernameInput);
+    }
   };
 
   const handleButtonClick = (buttonType: string) => {
@@ -165,7 +169,7 @@ const TransactionForm = () => {
             className="dropdown"
           >
             {filteredSuggestions
-            .slice(0, 10)
+            .slice(0, 20)
             .map((suggestion, index) => (
               <div 
                 className={`dropdown-row ${highlightedIndex === index ? 'highlighted' : ''}`}
