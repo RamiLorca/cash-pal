@@ -1,11 +1,16 @@
+import './TransactionForm.styles.scss';
 import React, { useState } from "react";
-import { transactionRequest, fetchTransfers, fetchUsernameSuggestions } from "../../utilities/TransferUtils";
-import { RootState } from "../../store";
-import { fetchOtherUserId } from "../../utilities/UserUtils";
+import {
+  transactionRequest,
+  fetchTransfers,
+  fetchUsernameSuggestions,
+} from "../../../utilities/TransferUtils";
+import { RootState } from "../../../store";
+import { fetchOtherUserId } from "../../../utilities/UserUtils";
 import { useSelector } from "react-redux";
 import CurrencyInput from "react-currency-input-field";
-import { createSelector } from 'reselect';
-import { useSuggestions } from "../../context/SuggestionsContext";
+import { createSelector } from "reselect";
+import { useSuggestions } from "../../../context/SuggestionsContext";
 
 const selectAccountId = (state: RootState) => state.account.account_id;
 const selectAccountUsername = (state: RootState) => state.account.username;
@@ -20,7 +25,6 @@ const accountSelector = createSelector(
 );
 
 const TransactionForm = () => {
-
   const { suggestions } = useSuggestions();
 
   const { account_id, account_username } = useSelector(accountSelector);
@@ -45,7 +49,6 @@ const TransactionForm = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    
     event.preventDefault();
 
     const otherUserId = await fetchOtherUserId(otherUsername);
@@ -55,7 +58,7 @@ const TransactionForm = () => {
         const response = await transactionRequest(
           account_username,
           account_id,
-          account_username, 
+          account_username,
           otherUserId,
           otherUsername,
           currentAmount
@@ -73,7 +76,7 @@ const TransactionForm = () => {
       try {
         const response = await transactionRequest(
           account_username,
-          otherUserId, 
+          otherUserId,
           otherUsername,
           account_id,
           account_username,
@@ -85,7 +88,6 @@ const TransactionForm = () => {
 
         fetchTransfers(account_id);
         resetForm();
-        
       } catch (error) {
         console.error(error);
       }
@@ -109,16 +111,41 @@ const TransactionForm = () => {
 
       <form id="transfer-form" onSubmit={handleSubmit}>
 
-        <input 
-          id="username-input"
-          type="text" 
-          placeholder="Enter username"
-          value={otherUsername}
-          onChange={(event) => {
-            setOtherUsername(event.target.value);
-            handleUsernameInput(event.target.value);
-          }} 
-        />
+        <div className='search-container'>
+
+          <div className='search-inner'>
+            <input
+              id="username-input"
+              type="text"
+              placeholder="Enter username"
+              value={otherUsername}
+              onChange={(event) => {
+                setOtherUsername(event.target.value);
+                handleUsernameInput(event.target.value);
+              }}
+            />
+          </div>
+
+          <div className="dropdown">
+            {suggestions.filter(suggestion => {
+              const searchTerm = otherUsername.toLowerCase();
+              const fullUsername = suggestion.toLowerCase();
+
+              return searchTerm && fullUsername.startsWith(searchTerm) && fullUsername !== searchTerm;
+            })
+            .slice(0, 10)
+            .map((suggestion) => (
+              <div 
+                className="dropdown-row"
+                key={suggestion}
+                onClick={() => handleUsernameClick(suggestion)}
+              >
+                  {suggestion}
+              </div>
+            ))}
+          </div>
+
+        </div>
 
         <br />
 
@@ -135,7 +162,7 @@ const TransactionForm = () => {
             setAmountInputValue(value || "");
           }}
         />
-        
+
         <br />
 
         <input type="submit" value={activeButton} />
@@ -143,20 +170,8 @@ const TransactionForm = () => {
 
       <br />
 
-      <div>
-        {suggestions.length > 0 && (
-          <ul>
-            {suggestions.map((suggestion) => (
-              <li key={suggestion} onClick={() => handleUsernameClick(suggestion)}>
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
     </div>
-  )
-}
+  );
+};
 
 export default TransactionForm;

@@ -37,6 +37,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "reselect": "^4.1.8",
+    "sass": "^1.69.5",
     "socket.io-client": "^4.7.2",
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.1",
@@ -73,6 +74,7 @@
   "devDependencies": {
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/node": "^20.5.9",
+    "@types/node-sass": "^4.11.7",
     "@types/sockjs-client": "^1.5.3",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
@@ -80,6 +82,7 @@
     "dotenv-webpack": "^8.0.1",
     "https-browserify": "^1.0.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "npm-run-all": "^4.1.5",
     "os-browserify": "^0.3.0",
     "process": "^0.11.10",
     "react-app-rewired": "^2.2.1",
