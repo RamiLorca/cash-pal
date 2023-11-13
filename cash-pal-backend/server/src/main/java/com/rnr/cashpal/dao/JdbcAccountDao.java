@@ -210,14 +210,6 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
-//    @Override
-//    public List<String> getAutoCompleteSuggestions(String usernameInput) {
-//        String sql = "SELECT DISTINCT username FROM account WHERE username ILIKE ? || '%' LIMIT ?";
-//        String wildcardPattern = usernameInput;
-//        int limit = suggestionLimit;
-//        return jdbcTemplate.queryForList(sql, String.class, wildcardPattern, limit);
-//    }
-
     @Override
     public List<String> getAutoCompleteSuggestions(String usernameInput) {
         String sql = "SELECT DISTINCT username FROM account WHERE username ILIKE ? || '%' ORDER BY username ASC LIMIT ?";

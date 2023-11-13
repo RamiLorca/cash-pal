@@ -1,6 +1,5 @@
 package com.rnr.cashpal.security;
 
-
 import com.rnr.cashpal.dao.AccountDao;
 import com.rnr.cashpal.model.Account;
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

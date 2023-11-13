@@ -11,14 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -63,8 +59,6 @@ public class AccountController {
             ObjectMapper objectMapper = new ObjectMapper();
             String suggestionJson = objectMapper.writeValueAsString(suggestions);
             messagingTemplate.convertAndSend("/topic/accounts-autocomplete/" + accountId, suggestionJson);
-
-            System.out.println(suggestionJson);
 
         } catch (DataAccessException | JsonProcessingException e) {
             System.out.println(e.getMessage());
