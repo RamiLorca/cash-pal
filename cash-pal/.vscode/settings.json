@@ -1,3 +1,8 @@
 {
-  "cSpell.words": ["persistor", "reduxjs", "sockjs"]
+  "cSpell.words": [
+    "persistor",
+    "reduxjs",
+    "sockjs",
+    "stompjs"
+  ]
 }

@@ -7,21 +7,16 @@ import { store } from "../store";
 import { setAccountBalance } from '../features/account';
 import { fetchTransfers } from './TransferUtils';
 import SockJS from 'sockjs-client';
+import { useSuggestions } from '../context/SuggestionsContext';
 
 const selectAccountId = (state: RootState) => state.account.account_id;
+
 const accountIdSelector = createSelector(
   selectAccountId,
   (account_id) => ({
     account_id,
   })
 );
-
-// const client = new Client({
-//     brokerURL: 'ws://localhost:8080/transfers-websocket',
-//     reconnectDelay: 5000,
-//     heartbeatIncoming: 4000,
-//     heartbeatOutgoing: 4000,
-// });
 
 const client = new Client({
     webSocketFactory: () => new SockJS('http://localhost:8080/transfers-websocket'),
@@ -30,26 +25,16 @@ const client = new Client({
     heartbeatOutgoing: 4000,
 });
 
-// export const publishUsernameInput = (usernameInput: string) => {
-//     const token = store.getState().account.token;
-//     client.publish({
-//         destination: '/app/accounts-autocomplete', 
-//         body: JSON.stringify({ usernameInput }),
-//         headers: {
-//             Authorization: `Bearer ${token}`
-//         }
-//     });
-//     console.log(usernameInput);
-// };
-
 const TransferWebSocketConfig = () => {
+
+    const { setNewSuggestions } = useSuggestions();
 
     const { account_id } = useSelector(accountIdSelector);
 
     useEffect(() => {
 
         client.onConnect = () => {
-            console.log('Connected to Transfer WebSocket');
+            // console.log('Connected to Transfer WebSocket');
 
             client.subscribe(`/topic/transfer-updates/${account_id}`, (message) => {
                 if (message.body) {
@@ -64,7 +49,7 @@ const TransferWebSocketConfig = () => {
                             fetchTransfers(account_id);
                         }
 
-                        console.log('Received message:', message.body);
+                        // console.log('Received message:', message.body);
 
                     } catch (error) {
                         console.error("Error parsing message body:", error);
@@ -73,26 +58,20 @@ const TransferWebSocketConfig = () => {
             });
 
             client.subscribe(`/topic/accounts-autocomplete/${account_id}`, (message) => {
-
                 if (message.body) {
-
                     try {
-                        const jsonBody = JSON.parse(message.body);
-        
-                        console.log("Autocomplete suggestions:" + jsonBody);
-
+                        const suggestions = JSON.parse(message.body) as string[];
+                        setNewSuggestions(suggestions);
+                        // console.log("Websocket suggestions: ", suggestions);
                     } catch (error) {
                         console.error("Error parsing message body:", error);
                     }
                 }
-        
             });
-            
         };
         
-
         client.onDisconnect = () => {
-            console.log('Disconnected from WebSocket');
+            // console.log('Disconnected from WebSocket');
         };
 
         client.onStompError = (frame) => {
@@ -106,7 +85,7 @@ const TransferWebSocketConfig = () => {
             client.deactivate();
         }
 
-    }, [account_id]);
+    }, [account_id, setNewSuggestions]);
 
     return null;
     

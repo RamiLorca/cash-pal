@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 public class JdbcAccountDao implements AccountDao {
     private final BigDecimal INITIAL_BALANCE = new BigDecimal("1000.00");
-    private final int suggestionLimit = 10;
+    private final int suggestionLimit = 100;
     private JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDao (JdbcTemplate jdbcTemplate) {
@@ -212,8 +212,8 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public List<String> getAutoCompleteSuggestions(String usernameInput) {
-        String sql = "SELECT DISTINCT username FROM account WHERE username ILIKE ? LIMIT ?";
-        String wildcardPattern = "%" + usernameInput + "%";
+        String sql = "SELECT DISTINCT username FROM account WHERE username ILIKE ? || '%' ORDER BY username ASC LIMIT ?";
+        String wildcardPattern = usernameInput;
         int limit = suggestionLimit;
         return jdbcTemplate.queryForList(sql, String.class, wildcardPattern, limit);
     }
