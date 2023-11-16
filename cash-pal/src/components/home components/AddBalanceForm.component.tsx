@@ -16,13 +16,15 @@ const accountSelector = createSelector(
 );
 
 function AddBalanceForm() {
-  const {account_id} = useSelector((accountSelector));
+  const { account_id } = useSelector((accountSelector));
 
-  const [amountToAdd, setAmountToAdd] = useState(0.00);
+  const [amountToAdd, setAmountToAdd] = useState("");
+  const [currentAmount, setCurrentAmount] = useState(0.00);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // TO DO: Add functionality to handle submit once the end point is made on the back end
-    const updatedAmount = await addToBalance(account_id, amountToAdd);
+    event.preventDefault();
+    console.log(currentAmount);
+    const updatedAmount = await addToBalance(account_id, currentAmount);
     accountSlice.actions.setAccountBalance(updatedAmount);
   }
 
@@ -31,20 +33,24 @@ function AddBalanceForm() {
       <h1>Add to Balance Form</h1>
 
       <form id="add-form" onSubmit={handleSubmit}>
+
         <CurrencyInput
-        id="add-amount"
-        name='amount'
-        placeholder='0.00'
-        decimalsLimit={2}
-        prefix='$'
-        value={amountToAdd}
-        onValueChange={value => {
-          const formattedValue = parseFloat(value || "0").toFixed(2);
-          setAmountToAdd(parseFloat(formattedValue));
-        }}
+          id="add-amount"
+          name="amount"
+          placeholder="$0.00"
+          allowDecimals={true}
+          allowNegativeValue={false}
+          decimalsLimit={2}
+          prefix='$'
+          value={amountToAdd}
+          onValueChange={(value) => {
+            const formattedValue = parseFloat(value || "0").toFixed(2);
+            setCurrentAmount(parseFloat(formattedValue));
+            setAmountToAdd(value || "");
+          }}
         />
 
-        <br/>
+        <br />
 
         <button type='submit'>Add Funds</button>
       </form>

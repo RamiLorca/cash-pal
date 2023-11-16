@@ -79,8 +79,10 @@ public class AccountController {
         int accountId = dto.getAccountId();
         BigDecimal amount = dto.getAmount();
 
-        accountDao.updateAccountBalance(accountId, amount);
+        BigDecimal updatedAmount = accountDao.addToBalance(accountId, amount);
 
-        return accountDao.addToBalance(accountId, amount);
+        accountDao.updateAccountBalance(accountId, updatedAmount);
+
+        return updatedAmount;
     }
 }
