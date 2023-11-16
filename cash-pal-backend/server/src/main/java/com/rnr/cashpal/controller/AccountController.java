@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -100,6 +101,7 @@ public class AccountController {
 
     @RequestMapping(path = "/accounts/addfunds", method = RequestMethod.PUT)
     public BigDecimal addFundsToAccount(@RequestBody AddToBalanceDTO dto) {
+        System.out.println("Adding funds to account...");
         int accountId = dto.getAccountId();
         BigDecimal amount = dto.getAmount();
 

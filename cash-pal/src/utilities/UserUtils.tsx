@@ -65,8 +65,20 @@ export const fetchOtherUserId = async (otherUsername: string) => {
 };
 
 export const addToBalance = async (accountId: number, amount: number) => {
+  const token = store.getState().account.token;
+
   try {
-    const response = await axios.put('http://localhost:8080/accounts/addfunds', {accountId: accountId, amount: amount});
+    const response = await axios.put(`http://localhost:8080/accounts/addfunds`,
+      {
+        accountId: accountId,
+        amount: amount
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
     console.log(response.data)
     return response.data;
   }

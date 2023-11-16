@@ -4,12 +4,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { addToBalance } from '../../utilities/UserUtils';
 import { accountSlice } from '../../features/account';
+import { createSelector } from '@reduxjs/toolkit';
 
+const selectAccountId = (state: RootState) => state.account.account_id;
+
+const accountSelector = createSelector(
+  selectAccountId,
+  (account_id) => ({
+    account_id
+  })
+);
 
 function AddBalanceForm() {
-  const {account_id} = useSelector((state: RootState) => ({
-    account_id: state.account.account_id
-  }));
+  const {account_id} = useSelector((accountSelector));
 
   const [amountToAdd, setAmountToAdd] = useState(0.00);
 

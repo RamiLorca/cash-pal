@@ -11,6 +11,9 @@ public class AddToBalanceDTO {
         this.amount = amount;
     }
 
+    public AddToBalanceDTO() {
+    }
+
     public int getAccountId() {
         return accountId;
     }
