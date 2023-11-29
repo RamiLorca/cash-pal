@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import { store, persistedStore } from './store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import './index.scss';
 
 dotenv.config();
 
