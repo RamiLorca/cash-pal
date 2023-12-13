@@ -1,0 +1,13 @@
+.main-signin-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin: auto;
+
+
+    .logo-signin-screen{
+        width: 350px;
+    }
+}

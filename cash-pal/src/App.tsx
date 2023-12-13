@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Navigation from "./router/NavigationBar/NavigationBar.component";
 import Home from "./router/Home.component";
 import Settings from "./router/Settings.component";
-import SignIn from "./router/SignIn.component";
+import SignIn from "./router/SignIn/SignIn.component";
 import { SuggestionsProvider } from "./context/SuggestionsContext";
 
 import TransferWebSocketConfig from "./utilities/TransferWebSocketConfig";
