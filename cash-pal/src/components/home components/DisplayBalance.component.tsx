@@ -16,7 +16,7 @@ const DisplayBalance = () => {
 
   return (
     <div>
-      <h1>Your Account Balance Is: {account.balance}</h1>
+      <h2>Account Balance: ${account.balance}</h2>
     </div>
   )
 }

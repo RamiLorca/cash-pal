@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import DisplayUsername from "../../components/home components/DisplayUsername.component";
+import DisplayUsername from "../../components/home components/display username components/DisplayUsername.component";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { logout } from "../../features/account";
@@ -7,7 +7,7 @@ import { clearTransferHistory } from "../../features/transfer";
 import { useIdleTimer, PresenceType } from "react-idle-timer";
 import { useEffect, useState } from "react";
 import { createSelector } from "reselect";
-import './NavigationBar.styles.scss';
+import "./NavigationBar.styles.scss";
 
 const selectIsLoggedIn = (state: RootState) => state.account.activated;
 const isLoggedInSelector = createSelector(selectIsLoggedIn, (isLoggedIn) => ({
@@ -76,7 +76,7 @@ const NavigationBar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="main-navigation-bar-container">
+    <div className="main-navigation-bar-container" style={{ display: "flex" }}>
       {/* block below allows view of idle timer */}
       {/* <p>Current State: {state}</p>
       <p>Action Events: {count}</p>
@@ -84,29 +84,35 @@ const NavigationBar = () => {
 
       {!hideNavigation && (
         <div className="navigation-container">
-          <div className="nav-link-container">
-              <Link className="nav-link" to="/">
-                Home
-              </Link>
-              <Link className="nav-link" to="/settings">
-                Settings
-              </Link>
 
-              {isLoggedIn ? (
-                <Link className="nav-link" to="/signin" onClick={handleSignOut}>
-                  Sign Out
-                </Link>
-              ) : (
-                <Link className="nav-link" to="/signin">
-                  Sign In
-                </Link>
-              )}
-          </div>
+          <img className="logo-nav-bar" src="cash-pal-logo-white.svg" alt="cash pal logo white" />
 
           <DisplayUsername />
+
+          <div className="nav-link-container">
+            <Link className="nav-link" to="/">
+              Home
+            </Link>
+
+            <Link className="nav-link" to="/settings">
+              Settings
+            </Link>
+
+            {isLoggedIn ? (
+              <Link className="nav-link" to="/signin" onClick={handleSignOut}>
+                Sign Out
+              </Link>
+            ) : (
+              <Link className="nav-link" to="/signin">
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       )}
-      <Outlet />
+      <div className="outlet">
+        <Outlet />
+      </div>
     </div>
   );
 };

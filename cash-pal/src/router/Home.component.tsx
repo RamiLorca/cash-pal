@@ -8,7 +8,6 @@ const Home = () => {
   return (
     <>
       <Outlet />
-      <div>Home</div>
       <DisplayBalance />
       <AddBalanceForm />
       <br/>
