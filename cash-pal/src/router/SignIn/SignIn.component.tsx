@@ -13,7 +13,7 @@ const SignIn = () => {
   return (
     <div className="main-signin-container">
       <img className="logo-signin-screen" src="cash-pal-logo-white.svg" alt="cash pal logo white" />
-      <div className="bg-zinc-800 shadow-md rounded-2xl px-8 pt-6 pb-8 mx-auto my-auto w-fit">
+      <div className="bg-zinc-800 shadow-md rounded-2xl px-8 pt-6 pb-8 mx-auto my-7 w-fit">
         {/* <h1 className="text-xl font-semibold mb-3">{isSignedIn ? "Sign In" : "Register"}</h1> */}
         {isSignedIn ? <SignInForm /> : <RegistrationForm />}
         <button className="text-base text-gray-300 font-normal mt-3 hover:text-white" onClick={toggleForm}>

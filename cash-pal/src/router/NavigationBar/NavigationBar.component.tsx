@@ -86,7 +86,7 @@ const NavigationBar = () => {
       <p>{remaining} seconds remaining</p> */}
 
       {!hideNavigation && (
-        <div className='bg-green-700 flex flex-col justify-center w-3/12 mr-10 h-full shadow-lg shadow-green-700'>
+        <div className='bg-gradient-to-l from-green-600 from-5% via-green-700 via-40% to-green-900 to-100% flex flex-col justify-center w-3/12 mr-10 h-full'>
 
           <img className="logo-nav-bar" src="cash-pal-logo-white.svg" alt="cash pal logo white" />
 
