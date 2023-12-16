@@ -6,7 +6,7 @@ import AddBalanceForm from "../components/home components/AddBalanceForm.compone
 
 const Home = () => {
   return (
-    <>
+    <div className="flex flex-col justify-between h-full">
       <Outlet />
       <DisplayBalance />
       <AddBalanceForm />
@@ -14,7 +14,7 @@ const Home = () => {
       <TransactionForm />
       <br />
       <DisplayHistory />
-    </>
+    </div>
   );
 };
 

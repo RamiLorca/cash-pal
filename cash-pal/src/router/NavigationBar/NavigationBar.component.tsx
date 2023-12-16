@@ -76,14 +76,17 @@ const NavigationBar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="main-navigation-bar-container">
+    <div 
+      className='w-full h-screen flex flex-row'
+    >
+
       {/* block below allows view of idle timer */}
       {/* <p>Current State: {state}</p>
       <p>Action Events: {count}</p>
       <p>{remaining} seconds remaining</p> */}
 
       {!hideNavigation && (
-        <div className="navigation-container">
+        <div className='bg-green-700 flex flex-col justify-center w-3/12 mr-10 h-full shadow-lg shadow-green-700'>
 
           <img className="logo-nav-bar" src="cash-pal-logo-white.svg" alt="cash pal logo white" />
 

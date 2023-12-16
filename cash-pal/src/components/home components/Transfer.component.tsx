@@ -36,8 +36,7 @@ const Transfer = ({transfer_id, transfer_status, sender_username, receiver_usern
   }
 
   return (
-    <div>
-      <h3>Transfer:</h3>
+    <div className="bg-zinc-800 shadow-md rounded-2xl px-8 pt-6 pb-8 ml-0 mr-0 my-auto w-11/12 ">
       <p>Id: {transfer_id}</p>
       <p>Status: {transfer_status}</p>
       <p>Sender: {sender_username}</p>

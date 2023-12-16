@@ -44,21 +44,26 @@ const DisplayHistory = () => {
   }
 
   return (
-    <div>
-    <h1>Transfer History :</h1>
-    {sortedTransfers
-      .filter((transfer) => transfer !== null)
-      .map((transfer) => (
-        <Transfer
-          key={transfer.transfer_id}
-          transfer_id={transfer.transfer_id}
-          transfer_status={transfer.transfer_status}
-          sender_username={transfer.sender_username}
-          receiver_username={transfer.receiver_username}
-          amount={formatToCurrencyString(transfer.amount)}
-        />
-      ))}
-  </div>
+    <div className="overflow-y-hidden">
+      <h1 className="text-xl font-semibold mb-3">
+        Transfer History :
+      </h1>
+      <div className='max-h-96 overflow-y-scroll flex flex-col gap-y-8 mr-6'>
+          {sortedTransfers
+            .filter((transfer) => transfer !== null)
+            .map((transfer) => (
+              <Transfer
+                key={transfer.transfer_id}
+                transfer_id={transfer.transfer_id}
+                transfer_status={transfer.transfer_status}
+                sender_username={transfer.sender_username}
+                receiver_username={transfer.receiver_username}
+                amount={formatToCurrencyString(transfer.amount)}
+              />
+            ))}
+
+      </div>
+    </div>
   );
 };
   
