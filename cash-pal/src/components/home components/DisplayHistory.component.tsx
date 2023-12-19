@@ -37,18 +37,18 @@ const DisplayHistory = () => {
   if (!transfers || transfers.length === 0) {
     return (
       <div>
-        <h1>Transfer History :</h1>
+        <h1>Transfer History</h1>
         <p>No transfer history available.</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full overflow-y-hidden">
+    <div className="overflow-y-hidden pr-4">
       <h1 className="text-xl font-semibold mb-3">
-        Transfer History :
+        Transfer History
       </h1>
-      <div className='max-h-96 overflow-y-scroll flex flex-col gap-y-8 mr-6'>
+      <div className='max-h-96 overflow-y-scroll flex flex-col gap-y-5'>
           {sortedTransfers
             .filter((transfer) => transfer !== null)
             .map((transfer) => (

@@ -36,15 +36,42 @@ const Transfer = ({transfer_id, transfer_status, sender_username, receiver_usern
   }
 
   return (
-    <div className="bg-zinc-800 shadow-md rounded-2xl px-8 pt-6 pb-8 ml-0 mr-0 my-auto w-11/12 ">
-      <p>Id: {transfer_id}</p>
-      <p>Status: {transfer_status}</p>
-      <p>Sender: {sender_username}</p>
-      <p>Receiver: {receiver_username}</p>
-      <p>Amount: {amount}</p>
+    <div className="bg-zinc-800 shadow-md rounded-3xl flex flex-col justify-center items-start gap-y-2 px-8 pt-6 pb-8 ml-0 mr-6 my-auto">
 
-      <button onClick={() => handleClick(true)}>Accept</button>
-      <button onClick={() => handleClick(false)}>Reject</button>
+      <p className='font-medium'>
+        Id: {transfer_id}
+      </p>
+
+      <div className='flex flex-row justify-between items-center w-full'>
+        
+        <p>{sender_username}</p>
+        <p>{receiver_username}</p>
+        <p className='font-normal'>{amount}</p>
+        <p className='italic font-normal'>{transfer_status}</p>
+
+        <div className='flex flex-row justify-center items-center gap-x-3'>
+          <button
+            className='shadow bg-green-500 hover:bg-green-600 focus:shadow-outline focus:outline-none rounded-2xl text-white font-semibold w-1/2 py-2 px-4'  
+            onClick={() => handleClick(true)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" data-slot="icon" className="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+          </button>
+
+          <button
+            className='shadow bg-rose-500 hover:bg-rose-600 focus:shadow-outline focus:outline-none rounded-2xl text-white font-semibold w-1/2 py-2 px-4'  
+            onClick={() => handleClick(false)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" data-slot="icon" className="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+        </div>
+
+      </div>
+
     </div>
   )
 };

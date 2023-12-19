@@ -3,7 +3,7 @@ import DisplayHistory from "../components/home components/DisplayHistory.compone
 
 const Home = () => {
   return (
-    <div className="flex flex-col justify-between h-full w-full">
+    <div className="flex flex-col justify-start h-full w-full">
       <TransactionForm />
       <DisplayHistory />
     </div>
