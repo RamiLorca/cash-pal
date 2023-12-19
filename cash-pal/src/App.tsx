@@ -5,8 +5,8 @@ import Home from "./router/Home.component";
 import Settings from "./router/Settings.component";
 import SignIn from "./router/SignIn/SignIn.component";
 import { SuggestionsProvider } from "./context/SuggestionsContext";
-
 import TransferWebSocketConfig from "./utilities/TransferWebSocketConfig";
+import Funds from "./router/Funds.component";
 
 const App = () => {
   return (
@@ -16,6 +16,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Navigation />}>
             <Route index element={<Home />} />
+            <Route path="funds" element={<Funds />} />
             <Route path="settings" element={<Settings />} />
             <Route path="signin" element={<SignIn />} />
           </Route>

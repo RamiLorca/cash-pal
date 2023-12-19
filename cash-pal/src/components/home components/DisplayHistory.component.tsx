@@ -44,7 +44,7 @@ const DisplayHistory = () => {
   }
 
   return (
-    <div className="overflow-y-hidden">
+    <div className="w-full overflow-y-hidden">
       <h1 className="text-xl font-semibold mb-3">
         Transfer History :
       </h1>

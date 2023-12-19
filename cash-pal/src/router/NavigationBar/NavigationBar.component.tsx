@@ -8,6 +8,7 @@ import { useIdleTimer, PresenceType } from "react-idle-timer";
 import { useEffect, useState } from "react";
 import { createSelector } from "reselect";
 import "./NavigationBar.styles.scss";
+import DisplayBalance from "../../components/home components/DisplayBalance.component";
 
 const selectIsLoggedIn = (state: RootState) => state.account.activated;
 const isLoggedInSelector = createSelector(selectIsLoggedIn, (isLoggedIn) => ({
@@ -95,20 +96,40 @@ const NavigationBar = () => {
           <div className="nav-link-container">
 
             <Link className="nav-link" to="/">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke-width="1.5" 
+              stroke="currentColor" 
+              data-slot="icon" 
+              className="w-6 h-6"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" 
+              />
+            </svg>
+              Transfer
+            </Link>
+
+            <Link className="nav-link" to="/funds">
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 24 24" 
-                fill="currentColor" 
+                fill="none" viewBox="0 0 24 24" 
+                stroke-width="1.5" 
+                stroke="currentColor" 
+                data-slot="icon" 
                 className="w-6 h-6"
               >
                 <path 
-                  d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" 
-                />
-                <path 
-                  d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" 
                 />
               </svg>
-              Home
+              <DisplayBalance />
             </Link>
 
             <Link className="nav-link" to="/settings">

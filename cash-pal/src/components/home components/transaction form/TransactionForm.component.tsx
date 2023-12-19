@@ -136,17 +136,43 @@ const TransactionForm = () => {
   };
 
   return (
-    <div>
-      <h1>Transaction Form</h1>
+    <div className='bg-zinc-800 shadow-md rounded-2xl px-6 py-6 mx-0 my-auto w-1/3 flex flex-col justify-start items-center gap-y-5'>
+      
+      <div className='flex flex-row gap-x-4'>
+        <button 
+          onClick={() => handleButtonClick("Send Money")}
+          className='shadow bg-blue-700 hover:bg-blue-600 focus:shadow-outline focus:outline-none rounded-xl text-white font-bold w-6/12 py-2 px-4' 
+        >
+          Send
+        </button>
+        <button 
+          onClick={() => handleButtonClick("Request Money")}
+          className='shadow bg-blue-700 hover:bg-blue-600 focus:shadow-outline focus:outline-none rounded-xl text-white font-bold w-6/12 py-2 px-4' 
+        >
+          Request
+        </button>
+      </div>
 
-      <button onClick={() => handleButtonClick("Send Money")}>
-        Send Money
-      </button>
-      <button onClick={() => handleButtonClick("Request Money")}>
-        Request Money
-      </button>
+      <form 
+        id="transfer-form"
+        className='flex flex-col gap-y-4 w-full appearance-none'
+        onSubmit={handleSubmit}
+      >
 
-      <form id="transfer-form" onSubmit={handleSubmit}>
+        <CurrencyInput
+          id="amount-input"
+          className='bg-zinc-700 appearance-none border-gray-200 rounded-full w-full py-2 px-4 text-stone-950 leading-tight focus:outline-none focus:bg-zinc-600 focus:border-zinc-600'
+          name="amount"
+          placeholder="$0.00"
+          decimalsLimit={2}
+          prefix="$"
+          value={amountInputValue}
+          onValueChange={(value) => {
+            const formattedValue = parseFloat(value || "0").toFixed(2);
+            setCurrentAmount(parseFloat(formattedValue));
+            setAmountInputValue(value || "");
+          }}
+        />
 
         <div className='search-container'>
 
@@ -183,28 +209,13 @@ const TransactionForm = () => {
 
         </div>
 
-        <br />
-
-        <CurrencyInput
-          id="amount-input"
-          name="amount"
-          placeholder="$0.00"
-          decimalsLimit={2}
-          prefix="$"
-          value={amountInputValue}
-          onValueChange={(value) => {
-            const formattedValue = parseFloat(value || "0").toFixed(2);
-            setCurrentAmount(parseFloat(formattedValue));
-            setAmountInputValue(value || "");
-          }}
+        <input
+          className='shadow bg-green-700 hover:bg-green-600 cursor-pointer focus:shadow-outline focus:outline-none rounded-xl text-white font-bold py-2 px-4' 
+          type="submit" 
+          value={activeButton} 
         />
 
-        <br />
-
-        <input type="submit" value={activeButton} />
       </form>
-
-      <br />
 
     </div>
   );

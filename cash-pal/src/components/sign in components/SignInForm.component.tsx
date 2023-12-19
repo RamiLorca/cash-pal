@@ -50,7 +50,7 @@ const SignInForm = () => {
         placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        className='bg-gray-200 appearance-none border-2 border-gray-200 rounded-md w-full py-2 px-4 text-stone-950 leading-tight focus:outline-none focus:bg-white focus:border-green-800"'
+        className='bg-gray-200 appearance-none border-2 border-gray-200 rounded-md w-full py-2 px-4 text-stone-950 leading-tight focus:outline-none focus:bg-white focus:border-green-800'
       />
 
       <input
@@ -58,12 +58,12 @@ const SignInForm = () => {
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className='bg-gray-200 appearance-none border-2 border-gray-200 rounded-md w-full py-2 px-4 text-stone-950 leading-tight focus:outline-none focus:bg-white focus:border-green-800"'
+        className='bg-gray-200 appearance-none border-2 border-gray-200 rounded-md w-full py-2 px-4 text-stone-950 leading-tight focus:outline-none focus:bg-white focus:border-green-800'
       />
 
       <button 
         type="submit"
-        className='shadow bg-green-700 hover:bg-green-600 focus:shadow-outline focus:outline-none rounded-md text-white font-bold py-2 px-4'
+        className='shadow bg-green-700 hover:bg-green-600 focus:shadow-outline focus:outline-none rounded-xl text-white font-bold py-2 px-4'
       >
         Login
       </button>

@@ -15,8 +15,8 @@ const DisplayBalance = () => {
   const { account } = useSelector(accountSelector);
 
   return (
-    <div>
-      <h2>Account Balance: ${account.balance}</h2>
+    <div className="text-xl font-semibold my-auto mx-auto">
+      <h3>{account.balance}</h3>
     </div>
   )
 }
