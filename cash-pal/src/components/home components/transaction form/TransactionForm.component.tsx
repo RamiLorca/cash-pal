@@ -136,7 +136,7 @@ const TransactionForm = () => {
   };
 
   return (
-    <div className='bg-zinc-800 shadow-md rounded-3xl px-6 py-6 mx-0 my-auto w-1/3 flex flex-col justify-start items-center gap-y-5'>
+    <div className='bg-zinc-800 shadow-md rounded-3xl px-6 py-6 mx-0 my-6 w-1/3 flex flex-col justify-start items-center gap-y-5'>
       
       <div className='w-full flex flex-row justify-start items-start gap-x-2'>
         <button 

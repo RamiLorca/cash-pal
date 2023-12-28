@@ -1,5 +1,4 @@
-import { combineReducers, configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import thunk from 'redux-thunk';
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import accountReducer, {AccountState} from "./features/account";
 import transferReducer, {TransferState} from "./features/transfer";
 import storage from 'redux-persist/lib/storage';
@@ -17,14 +16,6 @@ export interface RootState {
     account: AccountState;
     transfer: TransferState;
 }
-
-// export type AppDispatch = typeof store.dispatch;
-// export type AppThunk<ReturnType = void> = ThunkAction<
-//     ReturnType,
-//     RootState,
-//     unknown,
-//     Action<string>
-// >;
 
 const persistConfig = {
     key: 'root',
