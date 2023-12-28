@@ -33,7 +33,7 @@ const { account_id, account_username } = useSelector((state: RootState) => ({
   }
 
   return (
-    <div className='text-gray-300 flex flex-col justify-center items-start gap-y-2 py-6 mx-12 my-auto'>
+    <div className='text-gray-300 flex flex-col justify-center items-start gap-6 py-6 mx-12 my-auto'>
 
       <p className='font-medium'>
         Id: {transfer_id}
@@ -42,7 +42,14 @@ const { account_id, account_username } = useSelector((state: RootState) => ({
       <div className='flex flex-row justify-between items-center w-full'>
 
         <div className='flex flex-row justify-start items-start text-left w-1/3 mx-0'>
-          <p>{other_username}</p>
+          <div className='flex flex-row justify-start items-center gap-4'>
+            <img
+              className="inline-block h-10 w-10 rounded-full ring-2 ring-gray-200 bg-gray-100"
+              src="default-avatar.svg"
+              alt=""
+            />
+            <p>{other_username}</p>
+          </div>
         </div>
 
         <div className='flex flex-row justify-start items-start text-left w-1/6 mx-0'>

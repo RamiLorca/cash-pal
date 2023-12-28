@@ -78,7 +78,7 @@ const NavigationBar = () => {
 
   return (
     <div 
-      className='w-full h-screen flex flex-row'
+      className='w-full min-h-screen flex flex-row my-0 py-0'
     >
 
       {/* block below allows view of idle timer */}
@@ -87,7 +87,7 @@ const NavigationBar = () => {
       <p>{remaining} seconds remaining</p> */}
 
       {!hideNavigation && (
-        <div className='bg-gradient-to-l from-green-600 from-5% via-green-700 via-40% to-green-900 to-100% flex flex-col justify-center w-3/12 mr-10 h-full'>
+        <div className='bg-gradient-to-l from-green-600 from-5% via-green-700 via-40% to-green-900 to-100% flex flex-col justify-center mih-h-fit w-3/12 mr-10'>
 
           <img className="logo-nav-bar" src="cash-pal-logo-white.svg" alt="cash pal logo white" />
 

@@ -136,86 +136,91 @@ const TransactionForm = () => {
   };
 
   return (
-    <div className='bg-zinc-800 shadow-md rounded-3xl px-6 py-6 mx-0 my-6 w-1/3 flex flex-col justify-start items-center gap-y-5'>
-      
-      <div className='w-full flex flex-row justify-start items-start gap-x-2'>
-        <button 
-          onClick={() => handleButtonClick("Send Money")}
-          className='bg-transparent text-gray-200 focus:shadow-outline focus:outline-none rounded-xl hover:text-white font-semibold py-2 px-2' 
-        >
-          Send
-        </button>
-        <button 
-          onClick={() => handleButtonClick("Request Money")}
-          className='bg-transparent text-gray-200 focus:shadow-outline focus:outline-none rounded-xl hover:text-white font-semibold py-2 px-2' 
-        >
-          Request
-        </button>
-      </div>
+    <div className='mt-6 w-96'>
 
-      <form 
-        id="transfer-form"
-        className='flex flex-col gap-y-4 w-full appearance-none'
-        onSubmit={handleSubmit}
-      >
-
-        <CurrencyInput
-          id="amount-input"
-          className='bg-zinc-700 appearance-none rounded-full w-full h-10 py-2 px-4 text-stone-950 leading-tight focus:outline-none focus:bg-zinc-600'
-          name="amount"
-          placeholder="$0.00"
-          decimalsLimit={2}
-          prefix="$"
-          value={amountInputValue}
-          onValueChange={(value) => {
-            const formattedValue = parseFloat(value || "0").toFixed(2);
-            setCurrentAmount(parseFloat(formattedValue));
-            setAmountInputValue(value || "");
-          }}
-        />
-
-        <div className='search-container'>
-
-          <div className='search-inner'>
-            <input
-              id="username-input"
-              type="text"
-              placeholder="Enter username"
-              value={otherUsername}
-              onChange={(event) => {
-                setOtherUsername(event.target.value);
-                handleUsernameInput(event.target.value);
-              }}
-              onKeyDown={handleKeyDown}
-              autoComplete="off"
-            />
-          </div>
-
-          <div 
-            className="dropdown"
+      <div className='w-full flex flex-row justify-between items-start'>
+          <button 
+            onClick={() => handleButtonClick("Send Money")}
+            className={`bg-transparent text-gray-200 w-1/2 focus:shadow-outline focus:outline-none rounded-t-3xl hover:text-white font-semibold py-3 px-6 ${activeButton === 'Send Money' ? 'opacity-100 bg-zinc-800' : 'opacity-30 bg-zinc-900'}`} 
           >
-            {filteredSuggestions
-            .slice(0, 20)
-            .map((suggestion, index) => (
-              <div 
-                className={`dropdown-row ${highlightedIndex === index ? 'highlighted' : ''}`}
-                key={suggestion}
-                onClick={() => handleUsernameClick(suggestion)}
-              >
-                  {suggestion}
-              </div>
-            ))}
-          </div>
-
+            Send
+          </button>
+          <button 
+            onClick={() => handleButtonClick("Request Money")}
+            className={`bg-transparent text-gray-200 w-1/2 focus:shadow-outline focus:outline-none rounded-t-3xl hover:text-white font-semibold py-3 px-6 ${activeButton === 'Request Money' ? 'opacity-100 bg-zinc-800' : 'opacity-30 bg-zinc-900'}`} 
+          >
+            Request
+          </button>
         </div>
 
-        <input
-          className='shadow bg-green-700 hover:bg-green-600 cursor-pointer focus:shadow-outline focus:outline-none rounded-xl text-white font-semibold py-2 px-4' 
-          type="submit" 
-          value={activeButton} 
-        />
+      <div className={`bg-zinc-800 shadow-md rounded-3xl px-6 py-6 mx-0 mt-0 mb-6 w-full flex flex-col justify-start items-center gap-y-5 ${activeButton === 'Send Money' ? 'rounded-tl-none' : 'rounded-tr-none'}`}>
 
-      </form>
+        <form 
+          id="transfer-form"
+          className='flex flex-col gap-y-4 w-full appearance-none'
+          onSubmit={handleSubmit}
+        >
+
+          <CurrencyInput
+            id="amount-input"
+            className='bg-zinc-700 text-gray-300 appearance-none rounded-full w-full h-10 py-2 px-4 leading-tight focus:outline-none focus:bg-zinc-600'
+            name="amount"
+            placeholder="$0.00"
+            decimalsLimit={2}
+            prefix="$"
+            value={amountInputValue}
+            onValueChange={(value) => {
+              const formattedValue = parseFloat(value || "0").toFixed(2);
+              setCurrentAmount(parseFloat(formattedValue));
+              setAmountInputValue(value || "");
+            }}
+            autoComplete='off'
+          />
+
+          <div className='search-container'>
+
+            <div className='search-inner'>
+              <input
+                id="username-input"
+                type="text"
+                placeholder="Enter username"
+                value={otherUsername}
+                onChange={(event) => {
+                  setOtherUsername(event.target.value);
+                  handleUsernameInput(event.target.value);
+                }}
+                onKeyDown={handleKeyDown}
+                autoComplete="off"
+              />
+            </div>
+
+            <div 
+              className="dropdown"
+            >
+              {filteredSuggestions
+              .slice(0, 20)
+              .map((suggestion, index) => (
+                <div 
+                  className={`dropdown-row ${highlightedIndex === index ? 'highlighted' : ''}`}
+                  key={suggestion}
+                  onClick={() => handleUsernameClick(suggestion)}
+                >
+                    {suggestion}
+                </div>
+              ))}
+            </div>
+
+          </div>
+
+          <input
+            className='shadow bg-green-700 hover:bg-green-600 cursor-pointer focus:shadow-outline focus:outline-none rounded-xl text-white font-semibold py-2 px-4' 
+            type="submit" 
+            value={activeButton} 
+          />
+
+        </form>
+
+      </div>
 
     </div>
   );
